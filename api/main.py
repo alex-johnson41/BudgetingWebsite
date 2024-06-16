@@ -1,15 +1,16 @@
-from typing import Union
+from fastapi import Depends, FastAPI
+from fastapi.concurrency import asynccontextmanager
 
-from fastapi import FastAPI
-
-app = FastAPI()
-
-
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
+from dependencies import get_session
+from routers import transactions
+from database import database
 
 
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
+app = FastAPI(
+    dependencies=[Depends(get_session)]
+)
+app.include_router(transactions.router)
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    database.create_db_and_tables()
