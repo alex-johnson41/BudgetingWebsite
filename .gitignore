@@ -190,3 +190,6 @@ coverage
 *.tsbuildinfo
 
 .vscode
+
+database.db
+raw_data.csv
