@@ -8,11 +8,11 @@ class TransactionService:
     def __init__(self, session: Session):
         self.transaction_repository = TransactionRepository(session)
 
-    def get_all(self) -> list[Transaction]:
-        return self.transaction_repository.get_all()
+    def get_all(self, user_id: int) -> list[Transaction]:
+        return self.transaction_repository.get_all(user_id)
     
-    def get_filtered(self, filters: dict) -> list[Transaction]:
-        return self.transaction_repository.get_filtered(filters)
+    def get_filtered(self, user_id: int, filters: dict) -> list[Transaction]:
+        return self.transaction_repository.get_filtered(user_id, filters)
     
     def get_by_id(self, transaction_id: int) -> Transaction:
         return self.transaction_repository.get_by_id(transaction_id)

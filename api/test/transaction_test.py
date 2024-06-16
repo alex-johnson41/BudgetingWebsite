@@ -3,6 +3,7 @@ from sqlmodel import Session, select
 from api.models.transaction import Transaction
 from api.repositories.transaction_repository import TransactionRepository
 
+
 class TestTransactionRepository:
 
     def setup_method(self):

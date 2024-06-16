@@ -11,22 +11,34 @@ router = APIRouter(
 )
 
 
-@router.post("/")
-def create_transaction(transaction: Transaction, session: Session = Depends(get_session)):
+@router.get("/{user_id}")
+def get_all_transactions(user_id: int, session: Session = Depends(get_session)):
     _service = TransactionService(session)
-    return _service.create(transaction)
+    return _service.get_all(user_id)
 
 
-@router.get("/")
-def get_all_transactions(session: Session = Depends(get_session)):
+@router.get("/{user_id}/filter")
+def get_filtered_transactions(user_id: int, filters: dict, session: Session = Depends(get_session)):
     _service = TransactionService(session)
-    return _service.get_all()
+    return _service.get_filtered(user_id, filters)
 
 
 @router.get("/{transaction_id}")
 def get_transaction_by_id(transaction_id: int, session: Session = Depends(get_session)):
     _service = TransactionService(session)
     return _service.get_by_id(transaction_id)
+
+
+@router.post("/")
+def create_transaction(transaction: Transaction, session: Session = Depends(get_session)):
+    _service = TransactionService(session)
+    return _service.create(transaction)
+
+
+@router.delete("/{transaction_id}")
+def delete_transaction(transaction_id: int, session: Session = Depends(get_session)):
+    _service = TransactionService(session)
+    return _service.delete(transaction_id)
 
 
 @router.post("/drop")

@@ -48,14 +48,20 @@ def create_models(data: list[list[str]]):
         models.append(model)
     return models
 
+
 def push_to_table(models):
     for model in models:
-        response = requests.post("http://127.0.0.1:8000/transactions/", json=model)
+        response = requests.post(
+            "http://127.0.0.1:8000/transactions/", json=model)
         if response.status_code != 200:
-            print(f"Failed to push model {model} to the API. Status code: {response.status_code}")
-            print(response.content)  # Print the response content for debugging purposes
+            print(
+                f"Failed to push model {model} to the API. Status code: {response.status_code}")
+            # Print the response content for debugging purposes
+            print(response.content)
     return models
 
-data = read_csv_file("/Users/alexjohnson/SoftwareProjects/BudgetingWebsite/api/raw_data.csv")
+
+data = read_csv_file(
+    "/Users/alexjohnson/SoftwareProjects/BudgetingWebsite/api/raw_data.csv")
 models = create_models(data[1:])
 push_to_table(models)

@@ -10,6 +10,6 @@ class UserService:
 
     def get_user(self, id: int) -> User:
         return self.user_reposity.get_user(id)
-    
+
     def create(self, user: User) -> User:
         return self.user_reposity.create(user)
