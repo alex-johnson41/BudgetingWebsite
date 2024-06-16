@@ -1,5 +1,6 @@
 from sqlmodel import Session
-from database.database import engine
+
+from api.database.database import engine
 
 
 def get_session():
