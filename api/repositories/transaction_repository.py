@@ -1,20 +1,18 @@
-from sqlmodel import Session, select
+from sqlmodel import select
 
-from api.models.transaction import Transaction
+from api.models.transaction import Transaction, TransactionPublic, TransactionCreate, TransactionUpdate
+from api.repositories.base_repository import BaseRepository
 
 
-class TransactionRepository:
+class TransactionRepository(BaseRepository):
 
-    def __init__(self, session: Session):
-        self.session = session
-
-    def get_all(self, user_id: int) -> list[Transaction]:
+    def get_all(self, user_id: int) -> list[TransactionPublic]:
         return self.session.exec(select(Transaction).where(Transaction.user_id == user_id)).all()
 
-    def get_by_id(self, transaction_id: int) -> Transaction:
+    def get_by_id(self, transaction_id: int) -> TransactionPublic:
         return self.session.get(Transaction, transaction_id)
 
-    def get_filtered(self, user_id: int, filters: dict) -> list[Transaction]:
+    def get_filtered(self, user_id: int, filters: dict) -> list[TransactionPublic]:
         query = select(Transaction).where(Transaction.user_id == user_id)
         if 'year' in filters:
             query = query.where(Transaction.date.split("-")
@@ -39,13 +37,15 @@ class TransactionRepository:
 
         return self.session.exec(query).all()
 
-    def create(self, transaction: Transaction) -> Transaction:
+    def create(self, transaction: TransactionCreate) -> TransactionPublic:
+        transaction = Transaction.model_validate(transaction)
         self.session.add(transaction)
         self.session.commit()
         self.session.refresh(transaction)
         return transaction
 
-    def update(self, transaction_id: int, transaction: Transaction) -> Transaction:
+    # TODO: Fix this to use the right model in the method?
+    def update(self, transaction_id: int, transaction: TransactionUpdate) -> TransactionPublic:
         updated_transaction = self.get_by_id(transaction_id)
         for key, value in transaction.model_dump().items():
             setattr(updated_transaction, key, value)
@@ -53,7 +53,7 @@ class TransactionRepository:
         self.session.refresh(updated_transaction)
         return updated_transaction
 
-    def delete(self, transaction_id: int) -> Transaction:
+    def delete(self, transaction_id: int) -> TransactionPublic:
         transaction = self.get_by_id(transaction_id)
         self.session.delete(transaction)
         self.session.commit()

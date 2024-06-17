@@ -1,15 +1,15 @@
 from sqlmodel import Session
-
-from api.models.user import User
+from api.models.user import User, UserCreate, UserPublic
 from api.repositories.user_repository import UserRepository
 
 
 class UserService:
-    def __init__(self, session: Session):
-        self.user_reposity = UserRepository(session)
 
-    def get_user(self, id: int) -> User:
-        return self.user_reposity.get_user(id)
+    def __init__(self, session: Session) -> None:
+        self.repository = UserRepository(session)
 
-    def create(self, user: User) -> User:
-        return self.user_reposity.create(user)
+    def get_user(self, id: int) -> UserPublic:
+        return self.repository.get_user(id)
+
+    def create(self, user: UserCreate) -> UserPublic:
+        return self.repository.create(user)

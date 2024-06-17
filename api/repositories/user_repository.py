@@ -1,18 +1,17 @@
-from sqlmodel import Session, select
+from sqlmodel import select
 
-from api.models.user import User
+from api.models.user import User, UserCreate, UserPublic
+from api.repositories.base_repository import BaseRepository
 
 
-class UserRepository:
+class UserRepository(BaseRepository):
 
-    def __init__(self, session: Session):
-        self.session = session
+    def get_user(self, id: int) -> UserPublic:
+        return self.session.exec(select(User).where(User.id == id)).first()
 
-    def get_user(self, id: int) -> User:
-        return self.session.exec(select(User).where(User.id == id)).all()
-
-    def create(self, user: User) -> User:
-        self.session.add(user)
+    def create(self, user: UserCreate) -> User:
+        new_user = User.model_validate(user)
+        self.session.add(new_user)
         self.session.commit()
-        self.session.refresh(user)
-        return user
+        self.session.refresh(new_user)
+        return new_user
