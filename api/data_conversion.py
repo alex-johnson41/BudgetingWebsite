@@ -2,10 +2,14 @@ import calendar
 import csv
 
 import requests
-import json
+
+from api.models.category import Category
+from api.models.transaction import Transaction
+from api.models.user import User
+from api.repositories.category_repository import CategoryRepository
 
 
-def read_csv_file(file_path):
+def read_csv_file(file_path) -> list[list[str]]:
     data = []
     with open(file_path, 'r') as file:
         csv_reader = csv.reader(file)
@@ -14,7 +18,32 @@ def read_csv_file(file_path):
     return data
 
 
-def create_models(data: list[list[str]]):
+def create_categories(user: User, data: list[list[str]]):
+    categories = []
+    for row in data:
+        date = row[0].split(' ')[0]
+        timestamp = f"{date.split('/')[2]}-{date.split('/')[0].zfill(2)}-{date.split('/')[1].zfill(2)}"
+        income_or_expense = row[1]
+        income_source = row[2]
+        income_amount = row[3]
+        type_of_expense = row[4]
+        if row[5]:
+            expense_amount = 0 - float(row[5])
+        month = row[6]
+
+        is_income = income_or_expense == "Income"
+        type = income_source if income_or_expense == "Income" else type_of_expense
+
+        category = {
+            "name": type,
+            "is_income": is_income,
+            "user_id": 0
+        }
+        categories.append(category)
+    return categories
+
+
+def create_models(user: User, data: list[list[str]]):
     models = []
     for row in data:
         date = row[0].split(' ')[0]
@@ -38,7 +67,8 @@ def create_models(data: list[list[str]]):
         if month_name_from_num != month:
             timestamp = f"{timestamp.split('-')[0]}-{month_num_from_name:02d}-{timestamp.split('-')[2].zfill(2)}"
 
-        model = {
+        model = Transaction()
+        {
             "id": None,
             "userID": 0,
             "date": timestamp,
@@ -49,10 +79,10 @@ def create_models(data: list[list[str]]):
     return models
 
 
-def push_to_table(models):
+def push_to_table(models, route):
     for model in models:
         response = requests.post(
-            "http://127.0.0.1:8000/transactions/", json=model)
+            f"http://127.0.0.1:8000/{route}", json=model)
         if response.status_code != 200:
             print(
                 f"Failed to push model {model} to the API. Status code: {response.status_code}")
@@ -63,5 +93,7 @@ def push_to_table(models):
 
 data = read_csv_file(
     "/Users/alexjohnson/SoftwareProjects/BudgetingWebsite/api/raw_data.csv")
+categories = create_categories(data[1:])
+push_to_table(categories, "category")
 models = create_models(data[1:])
-push_to_table(models)
+push_to_table(models, "transaction")
