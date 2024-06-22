@@ -3,11 +3,6 @@ import csv
 
 import requests
 
-from api.models.category import Category
-from api.models.transaction import Transaction
-from api.models.user import User
-from api.repositories.category_repository import CategoryRepository
-
 
 def read_csv_file(file_path) -> list[list[str]]:
     data = []
@@ -18,7 +13,7 @@ def read_csv_file(file_path) -> list[list[str]]:
     return data
 
 
-def create_categories(user: User, data: list[list[str]]):
+def create_categories(data: list[list[str]]):
     categories = []
     for row in data:
         date = row[0].split(' ')[0]
@@ -37,13 +32,15 @@ def create_categories(user: User, data: list[list[str]]):
         category = {
             "name": type,
             "is_income": is_income,
-            "user_id": 0
+            "user_id": 1
         }
-        categories.append(category)
+        if category["name"] not in [c["name"] for c in categories]:
+            categories.append(category)
+
     return categories
 
 
-def create_models(user: User, data: list[list[str]]):
+def create_models(data: list[list[str]]):
     models = []
     for row in data:
         date = row[0].split(' ')[0]
@@ -52,12 +49,14 @@ def create_models(user: User, data: list[list[str]]):
         income_source = row[2]
         income_amount = row[3]
         type_of_expense = row[4]
-        if row[5]:
-            expense_amount = 0 - float(row[5])
+        expense_amount = row[5]
         month = row[6]
 
-        amount = income_amount if income_or_expense == "Income" else expense_amount
-        category = income_source if income_or_expense == "Income" else type_of_expense
+        amount = float(income_amount) if income_or_expense == "Income" else float(
+            expense_amount)
+        category_name = income_source if income_or_expense == "Income" else type_of_expense
+        category = requests.get(
+            f"http://127.0.0.1:8000/category/1/{category_name}").json()
 
         month_num = timestamp.split("-")[1]
 
@@ -67,13 +66,11 @@ def create_models(user: User, data: list[list[str]]):
         if month_name_from_num != month:
             timestamp = f"{timestamp.split('-')[0]}-{month_num_from_name:02d}-{timestamp.split('-')[2].zfill(2)}"
 
-        model = Transaction()
-        {
-            "id": None,
-            "userID": 0,
+        model = {
+            "user_id": 1,
             "date": timestamp,
             "amount": amount,
-            "category": category
+            "category_id": category["id"]
         }
         models.append(model)
     return models
@@ -86,7 +83,6 @@ def push_to_table(models, route):
         if response.status_code != 200:
             print(
                 f"Failed to push model {model} to the API. Status code: {response.status_code}")
-            # Print the response content for debugging purposes
             print(response.content)
     return models
 
