@@ -3,7 +3,7 @@ from sqlmodel import Session
 
 from api.services.category_service import CategoryService
 from api.dependencies import get_session
-from api.models.user import User
+from api.models import Category
 
 router = APIRouter(
     prefix="/category",
@@ -30,6 +30,6 @@ def get_filtered_categories(user_id: int, filters: dict, session: Session = Depe
 
 
 @router.post("/")
-def create_category(user: User, session: Session = Depends(get_session)):
+def create_category(user: Category, session: Session = Depends(get_session)):
     _service = CategoryService(session)
     return _service.create(user)

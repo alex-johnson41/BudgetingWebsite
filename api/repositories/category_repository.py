@@ -1,6 +1,6 @@
 from sqlmodel import select
 
-from api.models.category import Category
+from api.models import Category
 from api.repositories.base_repository import BaseRepository
 
 

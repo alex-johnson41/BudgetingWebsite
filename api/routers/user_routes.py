@@ -3,7 +3,7 @@ from sqlmodel import Session
 
 from api.services.user_service import UserService
 from api.dependencies import get_session
-from api.models.user import UserCreate, UserPublic
+from api.models import UserCreate, UserPublic
 
 router = APIRouter(
     prefix="/user",

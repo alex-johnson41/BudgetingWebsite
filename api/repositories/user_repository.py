@@ -1,6 +1,6 @@
 from sqlmodel import select
 
-from api.models.user import User, UserCreate, UserPublic
+from api.models import User, UserCreate, UserPublic
 from api.repositories.base_repository import BaseRepository
 
 

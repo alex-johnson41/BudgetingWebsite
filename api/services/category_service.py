@@ -1,5 +1,5 @@
 from sqlmodel import Session
-from api.models.category import Category
+from api.models import Category
 from api.repositories.category_repository import CategoryRepository
 
 

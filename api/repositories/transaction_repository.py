@@ -1,6 +1,6 @@
 from sqlmodel import select
 
-from api.models.transaction import Transaction, TransactionPublic, TransactionCreate, TransactionUpdate
+from api.models import Transaction, TransactionPublic, TransactionCreate, TransactionUpdate
 from api.repositories.base_repository import BaseRepository
 
 
@@ -42,7 +42,7 @@ class TransactionRepository(BaseRepository):
         self.session.add(transaction)
         self.session.commit()
         self.session.refresh(transaction)
-        return transaction
+        return TransactionPublic.model_validate(transaction)
 
     # TODO: Fix this to use the right model in the method?
     def update(self, transaction_id: int, transaction: TransactionUpdate) -> TransactionPublic:

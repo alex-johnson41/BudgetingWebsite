@@ -1,5 +1,5 @@
 from sqlmodel import Session
-from api.models.transaction import TransactionCreate, TransactionPublic, TransactionUpdate
+from api.models import TransactionCreate, TransactionPublic, TransactionUpdate
 from api.repositories.transaction_repository import TransactionRepository
 
 
