@@ -1,5 +1,5 @@
 from sqlmodel import Session
-from api.models import User, UserCreate, UserPublic
+from api.models import UserCreate, UserPublic
 from api.repositories.user_repository import UserRepository
 
 

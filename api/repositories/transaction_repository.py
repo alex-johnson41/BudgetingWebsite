@@ -10,7 +10,7 @@ class TransactionRepository(BaseRepository):
         return self.session.exec(select(Transaction).where(Transaction.user_id == user_id)).all()
 
     def get_by_id(self, transaction_id: int) -> TransactionPublic:
-        return self.session.get(Transaction, transaction_id)
+        return TransactionPublic.model_validate(self.session.get(Transaction, transaction_id))
 
     def get_filtered(self, user_id: int, filters: dict) -> list[TransactionPublic]:
         query = select(Transaction).where(Transaction.user_id == user_id)
@@ -44,7 +44,6 @@ class TransactionRepository(BaseRepository):
         self.session.refresh(transaction)
         return TransactionPublic.model_validate(transaction)
 
-    # TODO: Fix this to use the right model in the method?
     def update(self, transaction_id: int, transaction: TransactionUpdate) -> TransactionPublic:
         updated_transaction = self.get_by_id(transaction_id)
         for key, value in transaction.model_dump().items():
@@ -54,7 +53,7 @@ class TransactionRepository(BaseRepository):
         return updated_transaction
 
     def delete(self, transaction_id: int) -> TransactionPublic:
-        transaction = self.get_by_id(transaction_id)
+        transaction = self.session.get(Transaction, transaction_id)
         self.session.delete(transaction)
         self.session.commit()
-        return transaction
+        return TransactionPublic.model_validate(transaction)

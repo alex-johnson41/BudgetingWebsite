@@ -3,7 +3,7 @@ from sqlmodel import Session, select
 
 from api.services.transaction_service import TransactionService
 from api.dependencies import get_session
-from api.models import Transaction, TransactionCreate, TransactionPublic
+from api.models import TransactionCreate, TransactionPublic
 
 router = APIRouter(
     prefix="/transaction",
@@ -11,7 +11,7 @@ router = APIRouter(
 )
 
 
-@router.get("/{user_id}", response_model=list[TransactionPublic])
+@router.get("/user/{user_id}", response_model=list[TransactionPublic])
 def get_all_transactions(user_id: int, session: Session = Depends(get_session)):
     _service = TransactionService(session)
     return _service.get_all(user_id)
@@ -23,7 +23,7 @@ def get_filtered_transactions(user_id: int, filters: dict, session: Session = De
     return _service.get_filtered(user_id, filters)
 
 
-@router.get("/{transaction_id}", response_model=list[TransactionPublic])
+@router.get("/{transaction_id}", response_model=TransactionPublic)
 def get_transaction_by_id(transaction_id: int, session: Session = Depends(get_session)):
     _service = TransactionService(session)
     return _service.get_by_id(transaction_id)

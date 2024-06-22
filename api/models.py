@@ -2,6 +2,10 @@ from typing import List, Optional
 
 from sqlmodel import Field, Relationship, SQLModel
 
+"""
+    TRANSACTION MODELS
+"""
+
 
 class TransactionBase(SQLModel):
     user_id: int | None = Field(default=None, foreign_key="user.id")
@@ -21,6 +25,8 @@ class Transaction(TransactionBase, table=True):
 
 class TransactionPublic(TransactionBase):
     id: int
+    user: Optional["UserPublic"] = None
+    category: Optional["CategoryPublic"] = None
 
 
 class TransactionCreate(TransactionBase):
@@ -32,6 +38,11 @@ class TransactionUpdate(SQLModel):
     amount: float | None = None
     user_id: str | None = None
     category_id: Optional[int] = None
+
+
+"""
+    USER MODELS
+"""
 
 
 class UserBase(SQLModel):
@@ -48,19 +59,44 @@ class User(UserBase, table=True):
 
 class UserPublic(UserBase):
     id: int
-    transactions: List[Transaction] = []
+
+
+class UserPublicCategories(UserBase):
+    id: int
+    categories: List["Category"] = []
+
+
+class UserPublicTransactions(UserBase):
+    id: int
+    transactions: List["Transaction"] = []
 
 
 class UserCreate(UserBase):
     pass
 
 
-class Category(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
+"""
+    CATEGORY MODELS
+"""
+
+
+class CategoryBase(SQLModel):
     user_id: int | None = Field(default=None, foreign_key="user.id")
     name: str = Field()
     is_income: bool = Field(default=False)
 
+
+class Category(CategoryBase, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+
     user: Optional["User"] = Relationship(back_populates="categories")
     transactions: List["Transaction"] = Relationship(
         back_populates="category")
+
+
+class CategoryPublic(CategoryBase):
+    id: int
+
+
+class CategoryCreate(CategoryBase):
+    pass
