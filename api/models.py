@@ -3,7 +3,16 @@ from typing import List, Optional
 from sqlmodel import Field, Relationship, SQLModel
 
 """
-    TRANSACTION MODELS
+################################################################################################
+                ALL MODELS MUST BE DEFINED HERE TO AVOID CIRCULAR IMPORTS
+################################################################################################
+"""
+
+
+"""
+################################################################################################
+                                    TRANSACTION MODELS
+################################################################################################
 """
 
 
@@ -41,7 +50,9 @@ class TransactionUpdate(SQLModel):
 
 
 """
-    USER MODELS
+################################################################################################
+                                    USER MODELS
+################################################################################################
 """
 
 
@@ -76,7 +87,9 @@ class UserCreate(UserBase):
 
 
 """
-    CATEGORY MODELS
+################################################################################################
+                                    CATEGORY MODELS
+################################################################################################
 """
 
 
@@ -96,6 +109,16 @@ class Category(CategoryBase, table=True):
 
 class CategoryPublic(CategoryBase):
     id: int
+
+
+class CategoryPublicUser(CategoryBase):
+    id: int
+    user: Optional["UserPublic"] = None
+
+
+class CategoryPublicTransactions(CategoryBase):
+    id: int
+    transactions: List["Transaction"] = []
 
 
 class CategoryCreate(CategoryBase):

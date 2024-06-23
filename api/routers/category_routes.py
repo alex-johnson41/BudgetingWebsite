@@ -3,7 +3,7 @@ from sqlmodel import Session
 
 from api.services.category_service import CategoryService
 from api.dependencies import get_session
-from api.models import Category
+from api.models import CategoryCreate, CategoryPublic, CategoryPublicTransactions, CategoryPublicUser
 
 router = APIRouter(
     prefix="/category",
@@ -11,25 +11,31 @@ router = APIRouter(
 )
 
 
-@router.get("/{user_id}")
+@router.get("/user/{user_id}", response_model=list[CategoryPublic])
 def get_all_categories(user_id: int, session: Session = Depends(get_session)):
     _service = CategoryService(session)
     return _service.get_all_categories(user_id)
 
 
-@router.get("/{user_id}/{category_name}")
-def get_category_by_name(user_id: int, category_name: str, session: Session = Depends(get_session)):
+@router.get("/{id}", response_model=CategoryPublicUser)
+def get_category(id: int, session: Session = Depends(get_session)):
     _service = CategoryService(session)
-    return _service.get_category_by_name(user_id, category_name)
+    return _service.get_category(id)
 
 
-@router.get("/{user_id}/filter")
-def get_filtered_categories(user_id: int, filters: dict, session: Session = Depends(get_session)):
+@router.get("/{user_id}/filter", response_model=list[CategoryPublicUser])
+def get_filtered_categories(user_id: int, name: str | None = None, income: bool | None = None, session: Session = Depends(get_session)):
     _service = CategoryService(session)
-    return _service.get_filtered(user_id, filters)
+    return _service.get_filtered(user_id, {"name": name, "income": income})
 
 
-@router.post("/")
-def create_category(user: Category, session: Session = Depends(get_session)):
+@router.post("/", response_model=CategoryPublic)
+def create_category(category: CategoryCreate, session: Session = Depends(get_session)):
     _service = CategoryService(session)
-    return _service.create(user)
+    return _service.create(category)
+
+
+@router.delete("/{id}", response_model=CategoryPublic)
+def delete_category(id: int, session: Session = Depends(get_session)):
+    _service = CategoryService(session)
+    return _service.delete(id)
