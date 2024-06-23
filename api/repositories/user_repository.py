@@ -7,7 +7,10 @@ from api.repositories.base_repository import BaseRepository
 class UserRepository(BaseRepository):
 
     def get_user(self, id: int) -> UserPublic:
-        return UserPublic.model_validate(self.session.get(User, id))
+        return self.session.get(User, id)
+
+    def get_all(self) -> list[UserPublic]:
+        return self.session.exec(select(User)).all()
 
     def create(self, user: UserCreate) -> User:
         new_user = User.model_validate(user)
