@@ -11,7 +11,9 @@ from sqlmodel import Field, Relationship, SQLModel
 
 """
 ################################################################################################
+################################################################################################
                                     TRANSACTION MODELS
+################################################################################################
 ################################################################################################
 """
 
@@ -34,7 +36,21 @@ class Transaction(TransactionBase, table=True):
 
 class TransactionPublic(TransactionBase):
     id: int
+
+
+class TransactionPublicUserCategory(TransactionBase):
+    id: int
     user: Optional["UserPublic"] = None
+    category: Optional["CategoryPublic"] = None
+
+
+class TransactionPublicUser(TransactionBase):
+    id: int
+    user: Optional["UserPublic"] = None
+
+
+class TransactionPublicCategory(TransactionBase):
+    id: int
     category: Optional["CategoryPublic"] = None
 
 
@@ -46,12 +62,14 @@ class TransactionUpdate(SQLModel):
     date: str | None = None
     amount: float | None = None
     user_id: str | None = None
-    category_id: Optional[int] = None
+    category_id: int | None = None
 
 
 """
 ################################################################################################
+################################################################################################
                                     USER MODELS
+################################################################################################
 ################################################################################################
 """
 
@@ -88,8 +106,10 @@ class UserCreate(UserBase):
 
 """
 ################################################################################################
+################################################################################################
                                     CATEGORY MODELS
 ################################################################################################
+################################################################################################                                   
 """
 
 
