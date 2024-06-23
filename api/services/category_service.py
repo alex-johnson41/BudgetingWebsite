@@ -1,6 +1,6 @@
 from fastapi import HTTPException
 from sqlmodel import Session
-from api.models import Category, CategoryPublic, CategoryPublicTransactions, CategoryPublicUser, CategoryUpdate
+from api.models import Category, CategoryPublic, CategoryPublicUser, CategoryUpdate
 from api.repositories.category_repository import CategoryRepository
 
 

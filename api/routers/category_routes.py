@@ -3,7 +3,7 @@ from sqlmodel import Session
 
 from api.services.category_service import CategoryService
 from api.dependencies import get_session
-from api.models import CategoryCreate, CategoryPublic, CategoryPublicTransactions, CategoryPublicUser, CategoryUpdate
+from api.models import CategoryCreate, CategoryPublic, CategoryPublicUser, CategoryUpdate
 
 router = APIRouter(
     prefix="/category",
