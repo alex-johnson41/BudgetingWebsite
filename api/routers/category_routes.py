@@ -3,7 +3,7 @@ from sqlmodel import Session
 
 from api.services.category_service import CategoryService
 from api.dependencies import get_session
-from api.models import CategoryCreate, CategoryPublic, CategoryPublicTransactions, CategoryPublicUser
+from api.models import CategoryCreate, CategoryPublic, CategoryPublicTransactions, CategoryPublicUser, CategoryUpdate
 
 router = APIRouter(
     prefix="/category",
@@ -27,6 +27,12 @@ def get_category(id: int, session: Session = Depends(get_session)):
 def get_filtered_categories(user_id: int, name: str | None = None, income: bool | None = None, session: Session = Depends(get_session)):
     _service = CategoryService(session)
     return _service.get_filtered(user_id, {"name": name, "income": income})
+
+
+@router.patch("/{id}", response_model=CategoryPublic)
+def update_category(id: int, category: CategoryUpdate, session: Session = Depends(get_session)):
+    _service = CategoryService(session)
+    return _service.update(id, category)
 
 
 @router.post("/", response_model=CategoryPublic)

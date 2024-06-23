@@ -1,6 +1,6 @@
 from sqlmodel import select
 
-from api.models import Category, CategoryCreate, CategoryPublic, CategoryPublicUser
+from api.models import Category, CategoryCreate, CategoryPublic, CategoryPublicUser, CategoryUpdate
 from api.repositories.base_repository import BaseRepository
 
 
@@ -22,6 +22,15 @@ class CategoryRepository(BaseRepository):
             else:
                 query = query.where(Category.is_income == False)
         return self.session.exec(query).all()
+
+    def update(self, id: int, category: CategoryUpdate) -> CategoryPublic:
+        updated_category = self.session.get(Category, id)
+        for key, value in category.dict(exclude_unset=True).items():
+            setattr(updated_category, key, value)
+        self.session.add(updated_category)
+        self.session.commit()
+        self.session.refresh(updated_category)
+        return updated_category
 
     def create(self, category: CategoryCreate) -> Category:
         category = Category.model_validate(category)

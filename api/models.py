@@ -143,3 +143,9 @@ class CategoryPublicTransactions(CategoryBase):
 
 class CategoryCreate(CategoryBase):
     pass
+
+
+class CategoryUpdate(SQLModel):
+    name: str | None = None
+    user_id: int | None = None
+    is_income: bool | None = None
