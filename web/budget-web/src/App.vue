@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <side-bar />
+    <top-bar />
     <v-main>
       <HelloWorld />
     </v-main>
@@ -9,13 +9,13 @@
 
 <script>
 import HelloWorld from "./components/HelloWorld.vue";
-import SideBar from "./components/SideBar.vue";
+import TopBar from "./components/TopBar.vue";
 export default {
   name: "App",
 
   components: {
     HelloWorld,
-    SideBar,
+    TopBar,
   },
 
   data: () => ({
