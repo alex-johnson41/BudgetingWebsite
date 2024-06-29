@@ -1,20 +1,17 @@
 <template>
-    <v-app>
-        <side-nav-bar></side-nav-bar>>
-
-        <div class="wrapper">
-            <nav>
-                <RouterLink to="/">Home</RouterLink>
-                <RouterLink to="/about">About</RouterLink>
-            </nav>
-        </div>
-    </v-app>
-
-    <RouterView />
+    <v-responsive class="border rounded">
+        <v-app>
+            <side-nav-bar></side-nav-bar>
+            <v-main>
+                <transactions-view />
+            </v-main>
+        </v-app>
+    </v-responsive>
 </template>
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+// import { RouterLink, RouterView } from 'vue-router'
 import SideNavBar from './components/SideNavBar.vue'
+import TransactionsView from './views/TransactionsView.vue'
 </script>
 
 <style scoped>
