@@ -1,16 +1,9 @@
 <template>
     <v-dialog max-width="500px">
-        <template v-slot:activator="{ props }">
-            <v-btn class="mb-2" color="primary" dark v-bind="props">
-                <v-icon class="pr-3"> mdi-plus-box </v-icon>
-                New Transaction
-            </v-btn>
-        </template>
         <v-card>
             <v-card-title>
                 <span class="text-h5">{{ this.formTitle }}</span>
             </v-card-title>
-
             <v-card-text>
                 <v-container>
                     <v-row>
@@ -79,6 +72,13 @@ export default {
         itemDate: {
             get() {
                 if (!this.item.date) {
+                    // Doing all this to not be affected by timezones and UTC crap
+                    const today = new Date();
+                    const yyyy = today.getFullYear();
+                    const mm = String(today.getMonth() + 1).padStart(2, "0");
+                    const dd = String(today.getDate()).padStart(2, "0");
+                    // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+                    this.item.date = `${yyyy}-${mm}-${dd}`;
                     return new Date();
                 }
                 return new Date(this.item.date + "T00:00:00") || new Date();

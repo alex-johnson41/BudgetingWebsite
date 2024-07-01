@@ -7,7 +7,7 @@
                 <v-btn-toggle class="ml-10" rounded="4" group variant="outlined">
                     <v-btn to="/dashboard" value="left"> Dashboard </v-btn>
                     <v-btn to="/table" value="center"> Table </v-btn>
-                    <v-btn to="/data" value="right"> Add Data </v-btn>
+                    <v-btn to="/data" value="right"> Transactions </v-btn>
                     <v-btn to="/settings" value="justify"> Settings </v-btn>
                 </v-btn-toggle>
             </template>

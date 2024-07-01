@@ -1,4 +1,4 @@
-import AddDataView from "../views/AddDataView.vue";
+import AddDataView from "../views/TransactionsView.vue";
 import DashboardView from "../views/DashboardView.vue";
 import TableVue from "../views/TableView.vue";
 import SettingsView from "../views/SettingsView.vue";

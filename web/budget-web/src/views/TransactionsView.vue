@@ -5,12 +5,23 @@
             <v-data-table
                 :headers="headers"
                 :items="transactions"
-                :sort-by="[{ key: 'date', order: 'asc' }]"
+                :sort-by="[{ key: 'date', order: 'desc' }]"
             >
                 <template v-slot:top>
                     <v-toolbar flat>
                         <v-toolbar-title>Recent Transactions</v-toolbar-title>
                         <v-spacer />
+                        <v-btn
+                            @click="editItem"
+                            variant="outlined"
+                            class="mr-5"
+                            color="primary"
+                            dark
+                            v-bind="props"
+                        >
+                            <v-icon class="pr-3"> mdi-plus-box </v-icon>
+                            New Transaction
+                        </v-btn>
                         <edit-transaction-modal
                             v-model="dialog"
                             :editedItem="editedItem"
