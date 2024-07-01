@@ -26,6 +26,7 @@
                         />
                     </v-toolbar>
                 </template>
+                <template v-slot:item.amount="{ item }"> ${{ item.amount }} </template>
                 <template v-slot:item.actions="{ item }">
                     <v-icon class="me-2" size="small" @click="editItem(item)"> mdi-pencil </v-icon>
                     <v-icon size="small" @click="deleteItem(item)"> mdi-delete </v-icon>
@@ -40,7 +41,8 @@
 <script>
 import EditTransactionModal from "@/components/EditTransactionModal.vue";
 import DeleteTransactionModal from "@/components/DeleteTransactionModal.vue";
-
+// TODO: Make each row red or green for income or expense
+// Make category field a dropdown
 export default {
     components: {
         EditTransactionModal,
