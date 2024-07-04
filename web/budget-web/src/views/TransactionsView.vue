@@ -54,7 +54,6 @@
 <script>
 import EditTransactionModal from "@/components/EditTransactionModal.vue";
 import DeleteTransactionModal from "@/components/DeleteTransactionModal.vue";
-import _ from "underscore";
 
 export default {
     components: {
