@@ -17,7 +17,6 @@
                             class="mr-5"
                             color="primary"
                             dark
-                            v-bind="props"
                         >
                             <v-icon class="pr-3"> mdi-plus-box </v-icon>
                             New Transaction
@@ -26,6 +25,7 @@
                             v-model="dialog"
                             :editedItem="editedItem"
                             :formTitle="formTitle"
+                            :categories="categories"
                             @close="close"
                             @save="save"
                         />
@@ -37,13 +37,15 @@
                         />
                     </v-toolbar>
                 </template>
-                <template v-slot:item.amount="{ item }"> ${{ item.amount }} </template>
+                <template v-slot:item.amount="{ item }">
+                    <v-chip :color="item.category.is_income ? 'green' : 'red'" dark>
+                        ${{ item.amount }}
+                    </v-chip>
+                </template>
+                <template v-slot:item.category="{ item }"> {{ item.category.name }} </template>
                 <template v-slot:item.actions="{ item }">
                     <v-icon class="me-2" size="small" @click="editItem(item)"> mdi-pencil </v-icon>
                     <v-icon size="small" @click="deleteItem(item)"> mdi-delete </v-icon>
-                </template>
-                <template v-slot:no-data>
-                    <v-btn color="primary" @click="initialize"> Reset </v-btn>
                 </template>
             </v-data-table>
         </v-col>
@@ -52,8 +54,8 @@
 <script>
 import EditTransactionModal from "@/components/EditTransactionModal.vue";
 import DeleteTransactionModal from "@/components/DeleteTransactionModal.vue";
-// TODO: Make each row red or green for income or expense
-// Make category field a dropdown
+import _ from "underscore";
+
 export default {
     components: {
         EditTransactionModal,
@@ -75,7 +77,8 @@ export default {
             { title: "Actions", key: "actions", sortable: false },
         ],
         transactions: [],
-        editedIndex: -1,
+        categories: [],
+        editedId: -1,
         editedItem: {
             date: "",
             amount: 0,
@@ -92,99 +95,34 @@ export default {
 
     computed: {
         formTitle() {
-            return this.editedIndex === -1 ? "New Item" : "Edit Item";
+            return this.editedId === -1 ? "New Item" : "Edit Item";
         },
     },
-    created() {
-        this.initialize();
+    async mounted() {
+        await this.refreshTable();
     },
 
     methods: {
-        initialize() {
-            this.transactions = [
-                {
-                    date: "2021-10-01",
-                    amount: 100,
-                    category: "Groceries",
-                    description: "Aldi",
-                },
-                {
-                    date: "2021-10-02",
-                    amount: 50,
-                    category: "Shopping",
-                    description: "Amazon",
-                },
-                {
-                    date: "2021-10-03",
-                    amount: 20,
-                    category: "Entertainment",
-                    description: "Movie tickets",
-                },
-                {
-                    date: "2021-10-04",
-                    amount: 75,
-                    category: "Dining",
-                    description: "Restaurant",
-                },
-                {
-                    date: "2021-10-05",
-                    amount: 30,
-                    category: "Transportation",
-                    description: "Gas station",
-                },
-                {
-                    date: "2021-10-06",
-                    amount: 15,
-                    category: "Groceries",
-                    description: "Supermarket",
-                },
-                {
-                    date: "2021-10-07",
-                    amount: 50,
-                    category: "Shopping",
-                    description: "Online store",
-                },
-                {
-                    date: "2021-10-08",
-                    amount: 10,
-                    category: "Entertainment",
-                    description: "Concert tickets",
-                },
-                {
-                    date: "2021-10-09",
-                    amount: 40,
-                    category: "Dining",
-                    description: "Fast food",
-                },
-                {
-                    date: "2021-10-10",
-                    amount: 25,
-                    category: "Transportation",
-                    description: "Bus fare",
-                },
-                {
-                    date: "2021-10-11",
-                    amount: 60,
-                    category: "Shopping",
-                    description: "Department store",
-                },
-            ];
+        async refreshTable() {
+            this.categories = await this.$api.get("category/user/1"); // TODO: HARD CODED USER ID
+            this.transactions = await this.$api.get("transaction/user/1"); //TODO: HARD CODED USER ID
         },
 
         editItem(item) {
-            this.editedIndex = this.transactions.indexOf(item);
+            this.editedId = item.id || -1;
             this.editedItem = Object.assign({}, item);
             this.dialog = true;
         },
 
         deleteItem(item) {
-            this.editedIndex = this.transactions.indexOf(item);
+            this.editedId = item.id || -1;
             this.editedItem = Object.assign({}, item);
             this.dialogDelete = true;
         },
 
         deleteItemConfirm() {
-            this.transactions.splice(this.editedIndex, 1);
+            this.$api.delete(`transaction/${this.editedItem.id}`);
+            this.refreshTable();
             this.closeDelete();
         },
 
@@ -192,7 +130,7 @@ export default {
             this.dialog = false;
             this.$nextTick(() => {
                 this.editedItem = Object.assign({}, this.defaultItem);
-                this.editedIndex = -1;
+                this.editedId = -1;
             });
         },
 
@@ -200,16 +138,19 @@ export default {
             this.dialogDelete = false;
             this.$nextTick(() => {
                 this.editedItem = Object.assign({}, this.defaultItem);
-                this.editedIndex = -1;
+                this.editedId = -1;
             });
         },
 
-        save(item) {
-            if (this.editedIndex > -1) {
-                Object.assign(this.transactions[this.editedIndex], item);
+        async save(item) {
+            if (this.editedId > -1) {
+                this.$api.patch(`transaction/${item.id}`, item);
             } else {
-                this.transactions.push(item);
+                item.category_id = item.category.id;
+                item.user_id = 1; // TODO: HARD CODED USER ID
+                this.$api.post("transaction", item);
             }
+            await this.refreshTable();
             this.close();
         },
     },

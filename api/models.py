@@ -23,6 +23,7 @@ class TransactionBase(SQLModel):
     category_id: int | None = Field(default=None, foreign_key="category.id")
     date: str
     amount: float
+    description: str | None = Field(default=None)
 
 
 class Transaction(TransactionBase, table=True):

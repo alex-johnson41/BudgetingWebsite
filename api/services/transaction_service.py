@@ -30,9 +30,11 @@ class TransactionService:
         if transaction == None:
             raise HTTPException(
                 status_code=404, detail="Transaction not found")
+        return transaction
 
     def delete(self, transaction_id: int) -> TransactionPublic:
         transaction = self.repository.delete(transaction_id)
         if transaction == None:
             raise HTTPException(
                 status_code=404, detail="Transaction not found")
+        return transaction
