@@ -34,10 +34,12 @@
                 </tr>
                 <tr v-for="category in incomeHeaders" :key="category.id">
                     <td>{{ category.name }}</td>
-                    <td v-for="month in horizontalHeaders" :key="month">
+                    <td v-for="month in horizontalHeaders" :key="month" style="text-align: right">
                         {{ displayValue(calculateCellTotal(category.id, monthToNum(month))) }}
                     </td>
-                    <td>{{ displayValue(calculateCategoryTotal(category.id)) }}</td>
+                    <td style="text-align: right">
+                        {{ displayValue(calculateCategoryTotal(category.id)) }}
+                    </td>
                 </tr>
                 <tr style="background-color: lightcoral">
                     <td>EXPENSES</td>
@@ -46,10 +48,12 @@
                 </tr>
                 <tr v-for="category in expenseHeaders" :key="category.id">
                     <td>{{ category.name }}</td>
-                    <td v-for="month in horizontalHeaders" :key="month">
+                    <td v-for="month in horizontalHeaders" :key="month" style="text-align: right">
                         {{ displayValue(calculateCellTotal(category.id, monthToNum(month))) }}
                     </td>
-                    <td>{{ displayValue(calculateCategoryTotal(category.id)) }}</td>
+                    <td style="text-align: right">
+                        {{ displayValue(calculateCategoryTotal(category.id)) }}
+                    </td>
                 </tr>
                 <tr style="background-color: lightblue">
                     <td>TOTALS</td>
@@ -58,21 +62,21 @@
                 </tr>
                 <tr>
                     <td>Income:</td>
-                    <td v-for="month in horizontalHeaders" :key="month">
+                    <td v-for="month in horizontalHeaders" :key="month" style="text-align: right">
                         {{ displayValue(calculateMonthTotal(monthToNum(month), true)) }}
                     </td>
-                    <td>{{ displayValue(calculateTotal(true)) }}</td>
+                    <td style="text-align: right">{{ displayValue(calculateTotal(true)) }}</td>
                 </tr>
                 <tr>
                     <td>Expenses:</td>
-                    <td v-for="month in horizontalHeaders" :key="month">
+                    <td v-for="month in horizontalHeaders" :key="month" style="text-align: right">
                         {{ displayValue(calculateMonthTotal(monthToNum(month), false)) }}
                     </td>
-                    <td>{{ displayValue(calculateTotal(false)) }}</td>
+                    <td style="text-align: right">{{ displayValue(calculateTotal(false)) }}</td>
                 </tr>
                 <tr>
                     <td>Net:</td>
-                    <td v-for="month in horizontalHeaders" :key="month">
+                    <td v-for="month in horizontalHeaders" :key="month" style="text-align: right">
                         {{
                             displayValue(
                                 calculateMonthTotal(monthToNum(month), true) -
@@ -80,7 +84,9 @@
                             )
                         }}
                     </td>
-                    <td>{{ displayValue(calculateTotal(true) - calculateTotal(false)) }}</td>
+                    <td style="text-align: right">
+                        {{ displayValue(calculateTotal(true) - calculateTotal(false)) }}
+                    </td>
                 </tr>
             </tbody>
         </table>
