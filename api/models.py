@@ -85,6 +85,7 @@ class User(UserBase, table=True):
     transactions: List["Transaction"] = Relationship(
         back_populates="user")
     categories: List["Category"] = Relationship(back_populates="user")
+    budgets: List["Budget"] = Relationship(back_populates="user")
 
 
 class UserPublic(UserBase):
@@ -150,3 +151,55 @@ class CategoryUpdate(SQLModel):
     name: str | None = None
     user_id: int | None = None
     is_income: bool | None = None
+
+
+"""
+################################################################################################
+################################################################################################
+                                    BUDGET MODELS
+################################################################################################
+################################################################################################                                   
+"""
+
+
+class BudgetBase(SQLModel):
+    user_id: int | None = Field(default=None, foreign_key="user.id")
+    category_id: int = Field(foreign_key="category.id", nullable=False)
+    amount: float
+    month: int
+    year: int
+
+
+class Budget(BudgetBase, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+
+    user: Optional["User"] = Relationship(back_populates="budgets")
+    category: Optional["Category"] = Relationship()
+
+
+class BudgetPublic(BudgetBase):
+    id: int
+
+
+class BudgetPublicUserCategory(BudgetPublic):
+    user: Optional["UserPublic"] = None
+    category: Optional["CategoryPublic"] = None
+
+
+class BudgetPublicUser(BudgetPublic):
+    user: Optional["UserPublic"] = None
+
+
+class BudgetPublicCategory(BudgetPublic):
+    category: Optional["CategoryPublic"] = None
+
+
+class BudgetCreate(BudgetBase):
+    pass
+
+
+class BudgetUpdate(SQLModel):
+    amount: float | None = None
+    category_id: int | None = None
+    month: int | None = None
+    year: int | None = None

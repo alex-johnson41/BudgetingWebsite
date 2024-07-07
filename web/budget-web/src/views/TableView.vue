@@ -1,60 +1,90 @@
 <template>
-    <v-select v-model="selectedYear" :items="years" @update:modelValue="getData()" width="15%">
-    </v-select>
-    <table width="90%" class="ml-10 mt-5">
-        <thead>
-            <tr>
-                <th width="15%">Categories</th>
-                <th v-for="month in horizontalHeaders" :key="month" width="6.5%">{{ month }}</th>
-                <th>Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr style="background-color: green">
-                <td>INCOME</td>
-                <td v-for="month in horizontalHeaders" :key="month"></td>
-                <td></td>
-            </tr>
-            <tr v-for="category in incomeHeaders" :key="category.id">
-                <td>{{ category.name }}</td>
-                <td v-for="month in horizontalHeaders" :key="month">
-                    {{ calculateCellTotal(category.id, monthToNum(month)) }}
-                </td>
-                <td>{{ calculateCategoryTotal(category.id) }}</td>
-            </tr>
-            <tr style="background-color: red">
-                <td>EXPENSES</td>
-                <td v-for="month in horizontalHeaders" :key="month"></td>
-                <td></td>
-            </tr>
-            <tr v-for="category in expenseHeaders" :key="category.id">
-                <td>{{ category.name }}</td>
-                <td v-for="month in horizontalHeaders" :key="month">
-                    {{ calculateCellTotal(category.id, monthToNum(month)) }}
-                </td>
-                <td>{{ calculateCategoryTotal(category.id) }}</td>
-            </tr>
-            <tr style="background-color: blue">
-                <td>TOTALS</td>
-                <td v-for="month in horizontalHeaders" :key="month"></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Income:</td>
-                <td v-for="month in horizontalHeaders" :key="month">
-                    {{ calculateMonthTotal(monthToNum(month), true) }}
-                </td>
-                <td>{{ calculateTotal(true) }}</td>
-            </tr>
-            <tr>
-                <td>Expenses:</td>
-                <td v-for="month in horizontalHeaders" :key="month">
-                    {{ calculateMonthTotal(monthToNum(month), false) }}
-                </td>
-                <td>{{ calculateTotal(false) }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <v-row class="ml-10 mt-5 mb-0" width="100%">
+        <div class="d-flex align-end" style="width: 20%">
+            <p class="mr-2"><b>Select Year:</b></p>
+            <v-select
+                variant="underlined"
+                v-model="selectedYear"
+                :items="years"
+                @update:modelValue="getData()"
+                class="pa-0 ma-0"
+                density="compact"
+                solo
+                hide-details
+            >
+            </v-select>
+        </div>
+    </v-row>
+    <v-row class="mx-10 mb-10 mt-0">
+        <table width="100%">
+            <thead>
+                <tr>
+                    <th width="15%">Categories</th>
+                    <th v-for="month in horizontalHeaders" :key="month" width="6.5%">
+                        {{ month }}
+                    </th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="background-color: lightgreen">
+                    <td>INCOME</td>
+                    <td v-for="month in horizontalHeaders" :key="month"></td>
+                    <td></td>
+                </tr>
+                <tr v-for="category in incomeHeaders" :key="category.id">
+                    <td>{{ category.name }}</td>
+                    <td v-for="month in horizontalHeaders" :key="month">
+                        {{ displayValue(calculateCellTotal(category.id, monthToNum(month))) }}
+                    </td>
+                    <td>{{ displayValue(calculateCategoryTotal(category.id)) }}</td>
+                </tr>
+                <tr style="background-color: lightcoral">
+                    <td>EXPENSES</td>
+                    <td v-for="month in horizontalHeaders" :key="month"></td>
+                    <td></td>
+                </tr>
+                <tr v-for="category in expenseHeaders" :key="category.id">
+                    <td>{{ category.name }}</td>
+                    <td v-for="month in horizontalHeaders" :key="month">
+                        {{ displayValue(calculateCellTotal(category.id, monthToNum(month))) }}
+                    </td>
+                    <td>{{ displayValue(calculateCategoryTotal(category.id)) }}</td>
+                </tr>
+                <tr style="background-color: lightblue">
+                    <td>TOTALS</td>
+                    <td v-for="month in horizontalHeaders" :key="month"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Income:</td>
+                    <td v-for="month in horizontalHeaders" :key="month">
+                        {{ displayValue(calculateMonthTotal(monthToNum(month), true)) }}
+                    </td>
+                    <td>{{ displayValue(calculateTotal(true)) }}</td>
+                </tr>
+                <tr>
+                    <td>Expenses:</td>
+                    <td v-for="month in horizontalHeaders" :key="month">
+                        {{ displayValue(calculateMonthTotal(monthToNum(month), false)) }}
+                    </td>
+                    <td>{{ displayValue(calculateTotal(false)) }}</td>
+                </tr>
+                <tr>
+                    <td>Net:</td>
+                    <td v-for="month in horizontalHeaders" :key="month">
+                        {{
+                            displayValue(
+                                calculateMonthTotal(monthToNum(month), true) -
+                                    calculateMonthTotal(monthToNum(month), false)
+                            )
+                        }}
+                    </td>
+                    <td>{{ displayValue(calculateTotal(true) - calculateTotal(false)) }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </v-row>
 </template>
 
 <script>
@@ -101,6 +131,13 @@ export default {
             this.incomeHeaders = _.where(categories, { is_income: true });
             this.expenseHeaders = _.where(categories, { is_income: false });
         },
+        displayValue(value) {
+            return value == 0
+                ? ""
+                : value < 0
+                ? "-$" + (value * -1).toFixed(2)
+                : "$" + value.toFixed(2);
+        },
         calculateCellTotal(categoryId, month) {
             var filteredTransactions = _.where(this.transactions, { category_id: categoryId });
             var total = 0;
@@ -110,7 +147,7 @@ export default {
                     total += transaction.amount;
                 }
             });
-            return total == 0 ? "" : "$" + total.toFixed(2);
+            return total;
         },
         calculateCategoryTotal(categoryId) {
             var total = 0;
@@ -118,7 +155,7 @@ export default {
             filteredTransactions.forEach((transaction) => {
                 total += transaction.amount;
             });
-            return total == 0 ? "" : "$" + total.toFixed(2);
+            return total;
         },
         calculateMonthTotal(month, is_income) {
             var total = 0;
@@ -128,7 +165,7 @@ export default {
                     total += transaction.amount;
                 }
             });
-            return total == 0 ? "" : "$" + total.toFixed(2);
+            return total;
         },
         calculateTotal(is_income) {
             var total = 0;
@@ -137,7 +174,7 @@ export default {
                     total += transaction.amount;
                 }
             });
-            return total == 0 ? "" : "$" + total.toFixed(2);
+            return total;
         },
         monthToNum(month) {
             switch (month) {

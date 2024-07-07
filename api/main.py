@@ -3,7 +3,7 @@ from fastapi.concurrency import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
 
 from api.dependencies import get_session
-from api.routers import transaction_routes, user_routes, category_routes
+from api.routers import transaction_routes, user_routes, category_routes, budget_routes
 from api.database import database
 
 
@@ -33,3 +33,4 @@ app.add_middleware(
 app.include_router(transaction_routes.router)
 app.include_router(user_routes.router)
 app.include_router(category_routes.router)
+app.include_router(budget_routes.router)
