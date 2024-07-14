@@ -2,22 +2,12 @@
 <template>
     <v-row class="pt-0 mt-10" justify="center">
         <v-col cols="6">
-            <v-data-table
-                :headers="headers"
-                :items="transactions"
-                :sort-by="[{ key: 'date', order: 'desc' }]"
-            >
+            <v-data-table :headers="headers" :items="transactions" :sort-by="[{ key: 'date', order: 'desc' }]">
                 <template v-slot:top>
                     <v-toolbar flat>
                         <v-toolbar-title>Recent Transactions</v-toolbar-title>
                         <v-spacer />
-                        <v-btn
-                            @click="editItem"
-                            variant="outlined"
-                            class="mr-5"
-                            color="primary"
-                            dark
-                        >
+                        <v-btn @click="editItem" variant="outlined" class="mr-5" color="primary" dark>
                             <v-icon class="pr-3"> mdi-plus-box </v-icon>
                             New Transaction
                         </v-btn>
@@ -29,18 +19,11 @@
                             @close="close"
                             @save="save"
                         />
-                        <delete-transaction-modal
-                            v-model="dialogDelete"
-                            :editedItem="editedItem"
-                            @closeDelete="closeDelete"
-                            @deleteItemConfirm="deleteItemConfirm"
-                        />
+                        <confirm-delete-modal v-model="dialogDelete" @closeDelete="closeDelete" @deleteItemConfirm="deleteItemConfirm" />
                     </v-toolbar>
                 </template>
                 <template v-slot:item.amount="{ item }">
-                    <v-chip :color="item.category.is_income ? 'green' : 'red'" dark>
-                        ${{ item.amount }}
-                    </v-chip>
+                    <v-chip :color="item.category.is_income ? 'green' : 'red'" dark> ${{ item.amount }} </v-chip>
                 </template>
                 <template v-slot:item.category="{ item }"> {{ item.category.name }} </template>
                 <template v-slot:item.actions="{ item }">
@@ -53,12 +36,12 @@
 </template>
 <script>
 import EditTransactionModal from "@/components/EditTransactionModal.vue";
-import DeleteTransactionModal from "@/components/DeleteTransactionModal.vue";
+import ConfirmDeleteModal from "@/components/ConfirmDeleteModal.vue";
 
 export default {
     components: {
         EditTransactionModal,
-        DeleteTransactionModal,
+        ConfirmDeleteModal,
     },
     data: () => ({
         dialog: false,

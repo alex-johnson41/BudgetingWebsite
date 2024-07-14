@@ -7,7 +7,7 @@
                     <v-btn to="/dashboard" value="left"> Dashboard </v-btn>
                     <v-btn to="/table" value="center"> Table </v-btn>
                     <v-btn to="/data" value="right"> Transactions </v-btn>
-                    <v-btn to="/settings" value="justify"> Settings </v-btn>
+                    <v-btn to="/setup" value="justify"> Setup </v-btn>
                 </v-btn-toggle>
             </template>
 

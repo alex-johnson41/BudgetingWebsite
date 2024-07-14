@@ -77,12 +77,7 @@
                 <tr>
                     <td>Net:</td>
                     <td v-for="month in horizontalHeaders" :key="month" style="text-align: right">
-                        {{
-                            displayValue(
-                                calculateMonthTotal(monthToNum(month), true) -
-                                    calculateMonthTotal(monthToNum(month), false)
-                            )
-                        }}
+                        {{ displayValue(calculateMonthTotal(monthToNum(month), true) - calculateMonthTotal(monthToNum(month), false)) }}
                     </td>
                     <td style="text-align: right">
                         {{ displayValue(calculateTotal(true) - calculateTotal(false)) }}
@@ -101,20 +96,7 @@ export default {
     data: () => ({
         transactions: [],
         verticalHeaders: [],
-        horizontalHeaders: [
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "May",
-            "Jun",
-            "Jul",
-            "Aug",
-            "Sep",
-            "Oct",
-            "Nov",
-            "Dec",
-        ],
+        horizontalHeaders: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
         incomeHeaders: [],
         expenseHeaders: [],
         years: [],
@@ -130,19 +112,13 @@ export default {
     },
     methods: {
         async getData() {
-            this.transactions = await this.$api.get(
-                `transaction/1/filter?year=${this.selectedYear}`
-            ); //TODO: HARD CODED USER ID AND YEAR
+            this.transactions = await this.$api.get(`transaction/1/filter?year=${this.selectedYear}`); //TODO: HARD CODED USER ID AND YEAR
             var categories = await this.$api.get("category/user/1"); //TODO: HARD CODED USER ID
             this.incomeHeaders = _.where(categories, { is_income: true });
             this.expenseHeaders = _.where(categories, { is_income: false });
         },
         displayValue(value) {
-            return value == 0
-                ? ""
-                : value < 0
-                ? "-$" + (value * -1).toFixed(2)
-                : "$" + value.toFixed(2);
+            return value == 0 ? "" : value < 0 ? "-$" + (value * -1).toFixed(2) : "$" + value.toFixed(2);
         },
         calculateCellTotal(categoryId, month) {
             var filteredTransactions = _.where(this.transactions, { category_id: categoryId });

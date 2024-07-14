@@ -8,5 +8,5 @@ export default [
     { path: "/data", component: AddDataView },
     { path: "/dashboard", component: DashboardView },
     { path: "/table", component: TableVue },
-    { path: "/settings", component: SettingsView },
+    { path: "/setup", component: SettingsView },
 ];

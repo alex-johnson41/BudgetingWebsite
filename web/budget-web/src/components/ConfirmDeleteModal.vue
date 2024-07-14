@@ -13,10 +13,7 @@
 </template>
 <script>
 export default {
-    name: "DeleteTransactionModal",
-    props: {
-        editedItem: Object,
-    },
+    name: "ConfirmDeleteModal",
     methods: {
         closeDelete() {
             this.$emit("closeDelete");
