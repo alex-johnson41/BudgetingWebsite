@@ -10,19 +10,21 @@
                 <v-divider></v-divider>
             </v-list>
         </v-navigation-drawer>
-        <div v-if="display === 'budget'">budget</div>
-        <div v-if="display === 'category'"><CategoryEditor /></div>
+        <div v-if="display === 'budget'"><budget-editor /></div>
+        <div v-if="display === 'category'"><category-editor /></div>
         <div v-if="display === 'settings'">settings</div>
     </v-container>
 </template>
 
 <script>
 import CategoryEditor from "@/components/setup/CategoryEditor.vue";
+import BudgetEditor from "@/components/setup/BudgetEditor.vue";
 
 export default {
     name: "SetupView",
     components: {
         CategoryEditor,
+        BudgetEditor,
     },
     data: () => ({
         display: "budget",
