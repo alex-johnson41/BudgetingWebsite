@@ -29,6 +29,7 @@
                             v-model="dialogDelete"
                             :categories="categories"
                             :category="editedItem"
+                            :transactions="transactions"
                             @closeDelete="closeDeleteModal"
                             @deleteItemConfirm="deleteConfirmed"
                         />
@@ -80,7 +81,7 @@ export default {
             name: "",
             is_income: undefined,
         },
-        transactionsExist: false,
+        transactions: [],
     }),
 
     computed: {
@@ -104,7 +105,8 @@ export default {
             this.dialog = true;
         },
 
-        openDeleteCategoryModal(item) {
+        async openDeleteCategoryModal(item) {
+            this.transactions = await this.$api.get(`transaction/1/filter?category_id=${item.id}`);
             this.editedId = item.id || -1;
             this.editedItem = Object.assign({}, item);
             this.dialogDelete = true;

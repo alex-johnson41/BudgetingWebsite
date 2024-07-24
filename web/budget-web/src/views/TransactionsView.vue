@@ -19,7 +19,11 @@
                             @close="close"
                             @save="save"
                         />
-                        <confirm-delete-modal v-model="dialogDelete" @closeDelete="closeDelete" @deleteItemConfirm="deleteItemConfirm" />
+                        <confirm-delete-modal
+                            v-model="dialogDelete"
+                            @closeDelete="closeDelete"
+                            @deleteItemConfirm="deleteItemConfirm"
+                        />
                     </v-toolbar>
                 </template>
                 <template v-slot:item.amount="{ item }">
@@ -126,11 +130,11 @@ export default {
 
         async save(item) {
             if (this.editedId > -1) {
-                this.$api.patch(`transaction/${item.id}`, item);
+                await this.$api.patch(`transaction/${item.id}`, item);
             } else {
                 item.category_id = item.category.id;
                 item.user_id = 1; // TODO: HARD CODED USER ID
-                this.$api.post("transaction", item);
+                await this.$api.post("transaction", item);
             }
             await this.refreshTable();
             this.close();

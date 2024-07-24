@@ -3,7 +3,7 @@
         <v-card>
             <v-card-title class="text-h5 text-center">Are you sure you want to delete this category? </v-card-title>
             <div v-if="transactionsExist" class="text-center">
-                <v-card-text class="wrap-text pa-0">
+                <v-card-text class="wrap-text">
                     Before deleting, you must select which category all existing
                     <b>{{ category.name }}</b> transactions should be changed to
                 </v-card-text>
@@ -36,6 +36,7 @@
     </v-dialog>
 </template>
 <script>
+import _ from "underscore";
 export default {
     name: "ConfirmDeleteModal",
     props: {
@@ -44,6 +45,10 @@ export default {
             required: true,
         },
         categories: {
+            type: Array,
+            required: true,
+        },
+        transactions: {
             type: Array,
             required: true,
         },
@@ -56,7 +61,6 @@ export default {
             return this.categories.filter((cat) => cat.id !== this.category.id);
         },
         deleteDisabled() {
-            console.log(this.transactionsExist);
             if (this.transactionsExist) {
                 return this.mapTransactionsTo == null;
             } else {
@@ -64,21 +68,21 @@ export default {
             }
         },
         transactionsExist() {
-            return this.updateTransactionsExist();
+            return this.transactions.length > 0;
         },
     },
     methods: {
-        updateTransactionsExist() {
-            if (this.category.id != null) {
-                const transactions = this.$api.get(`transaction/1/filter?category_id=${this.category.id}`); //TODO: HARD CODED USER ID
-                return transactions.length > 0;
-            }
-            return false;
-        },
         closeDelete() {
             this.$emit("closeDelete");
         },
         deleteItemConfirm() {
+            for (let i = 0; i < this.transactions.length; i++) {
+                let updatedTransaction = _.clone(this.transactions[i]);
+                console.log(this.transactions[i]);
+                console.log(updatedTransaction);
+                updatedTransaction.category_id = this.mapTransactionsTo.id;
+                this.$api.patch(`transaction/${updatedTransaction.id}`, updatedTransaction);
+            }
             this.$emit("deleteItemConfirm");
         },
     },

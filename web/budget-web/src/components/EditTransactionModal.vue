@@ -16,11 +16,7 @@
                             ></v-date-input>
                         </v-col>
                         <v-col cols="12" md="4" sm="6">
-                            <v-text-field
-                                variant="outlined"
-                                v-model="item.amount"
-                                label="Amount"
-                            ></v-text-field>
+                            <v-text-field variant="outlined" v-model="item.amount" label="Amount"></v-text-field>
                         </v-col>
                         <v-col cols="12" md="4" sm="6">
                             <v-select
@@ -33,11 +29,7 @@
                             ></v-select>
                         </v-col>
                         <v-col cols="12" md="4" sm="6">
-                            <v-text-field
-                                variant="outlined"
-                                v-model="item.description"
-                                label="Description"
-                            ></v-text-field>
+                            <v-text-field variant="outlined" v-model="item.description" label="Description"></v-text-field>
                         </v-col>
                     </v-row>
                 </v-container>
@@ -97,6 +89,9 @@ export default {
             this.$emit("close");
         },
         save() {
+            if (this.item.category_id != this.item.category.id) {
+                this.item.category_id = this.item.category.id;
+            }
             this.$emit("save", Object.assign({}, this.item));
         },
     },
