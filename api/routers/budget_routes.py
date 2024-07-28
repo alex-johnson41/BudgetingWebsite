@@ -24,9 +24,9 @@ def get_budget(id: int, session: Session = Depends(get_session)):
 
 
 @router.get("/user/{user_id}/filter", response_model=list[BudgetPublicCategory])
-def get_filtered_budgets(user_id: int, name: str | None = None, income: bool | None = None, session: Session = Depends(get_session)):
+def get_filtered_budgets(user_id: int, year: int | None = None, month: int | None = None, session: Session = Depends(get_session)):
     _service = BudgetService(session)
-    return _service.get_filtered(user_id, {"name": name, "income": income})
+    return _service.get_filtered(user_id, {"year": year, "month": month})
 
 
 @router.patch("/{id}", response_model=BudgetPublicCategory)

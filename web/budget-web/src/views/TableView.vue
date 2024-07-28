@@ -77,7 +77,11 @@
                 <tr>
                     <td>Net:</td>
                     <td v-for="month in horizontalHeaders" :key="month" style="text-align: right">
-                        {{ displayValue(calculateMonthTotal(monthToNum(month), true) - calculateMonthTotal(monthToNum(month), false)) }}
+                        {{
+                            displayValue(
+                                calculateMonthTotal(monthToNum(month), true) - calculateMonthTotal(monthToNum(month), false)
+                            )
+                        }}
                     </td>
                     <td style="text-align: right">
                         {{ displayValue(calculateTotal(true) - calculateTotal(false)) }}
@@ -90,6 +94,7 @@
 
 <script>
 import _ from "underscore";
+import { numberWithCommas } from "@/utilities.js";
 
 export default {
     components: {},
@@ -118,7 +123,11 @@ export default {
             this.expenseHeaders = _.where(categories, { is_income: false });
         },
         displayValue(value) {
-            return value == 0 ? "" : value < 0 ? "-$" + (value * -1).toFixed(2) : "$" + value.toFixed(2);
+            return value == 0
+                ? ""
+                : value < 0
+                ? "-$" + numberWithCommas((value * -1).toFixed(2))
+                : "$" + numberWithCommas(value.toFixed(2));
         },
         calculateCellTotal(categoryId, month) {
             var filteredTransactions = _.where(this.transactions, { category_id: categoryId });

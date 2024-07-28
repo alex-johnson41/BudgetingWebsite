@@ -200,6 +200,5 @@ class BudgetCreate(BudgetBase):
 
 class BudgetUpdate(SQLModel):
     amount: float | None = None
-    category_id: int | None = None
     month: int | None = None
     year: int | None = None
