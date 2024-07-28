@@ -90,6 +90,7 @@
 </template>
 <script>
 import _ from "underscore";
+import * as cloneDeep from "lodash.clonedeep";
 export default {
     components: {},
     data: () => ({
@@ -174,7 +175,7 @@ export default {
         async refreshTable() {
             console.log(this.selectedMonth);
             await this.$api.get(`budget/user/1/filter?year=${this.selectedYear}&month=${this.selectedMonth}`).then((response) => {
-                this.budgets = response;
+                this.originalBudgets = response;
             }); // TODO: HARD CODED USER ID
             await this.$api.get("category/user/1").then((response) => {
                 this.categories = response;
@@ -182,6 +183,7 @@ export default {
             this.initializeBudget();
         },
         initializeBudget() {
+            this.budgets = cloneDeep(this.originalBudgets);
             this.categories.forEach((category) => {
                 const existingBudget = this.budgets.find((budget) => budget.category_id === category.id);
                 if (!existingBudget) {
@@ -201,7 +203,9 @@ export default {
             if (item.amount == "") item.amount = 0;
         },
         save() {
-            this.budgets.forEach(async (budget) => {
+            console.log(this.budgets);
+            console.log(this.originalBudgets);
+            const promises = this.budgets.forEach(async (budget) => {
                 if (budget.id === -1) {
                     const newBudget = {
                         user_id: budget.user_id,
@@ -212,13 +216,16 @@ export default {
                     };
                     await this.$api.post("budget", newBudget);
                 } else {
-                    const updatedBudget = {
-                        amount: budget.amount,
-                    };
-                    await this.$api.patch(`budget/${budget.id}`, updatedBudget);
+                    const originalBudget = this.originalBudgets.find((b) => b.id === budget.id);
+                    if (_.isEqual(originalBudget, budget) == false) {
+                        const updatedBudget = {
+                            amount: budget.amount,
+                        };
+                        await this.$api.patch(`budget/${budget.id}`, updatedBudget);
+                    }
                 }
             });
-            this.$nextTick(async () => {
+            Promise.all(promises).then(async () => {
                 await this.refreshTable();
             });
         },
