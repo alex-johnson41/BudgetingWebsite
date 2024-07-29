@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/valid-v-slot -->
 <template>
     <v-card elevation="0" class="ma-0 pa-0">
         <v-card-title style="font-size: 30px">Create Your Budget</v-card-title>
