@@ -21,10 +21,16 @@
                     ></v-select>
                 </v-col>
                 <v-col cols="3">
-                    <p class="remaining-amount">Remaining Amount: ${{ totalRemainingAmount }}</p>
-                    <v-btn variant="outlined" color="green" @click="importBudget">Import From Last Month</v-btn>
-                    <v-btn class="save-cancel-btns" variant="outlined" color="red" @click="refreshTable">Cancel</v-btn>
-                    <v-btn class="save-cancel-btns" variant="outlined" color="primary" @click="save">Save</v-btn>
+                    <v-row>
+                        <p class="remaining-amount">Remaining Amount: ${{ totalRemainingAmount }}</p>
+                    </v-row>
+                    <v-row class="mb-3">
+                        <v-btn variant="outlined" color="green" @click="importBudget">Import From Last Month</v-btn>
+                    </v-row>
+                    <v-row>
+                        <v-btn class="save-cancel-btns" variant="outlined" color="red" @click="refreshTable">Cancel</v-btn>
+                        <v-btn class="save-cancel-btns" variant="outlined" color="primary" @click="save">Save</v-btn>
+                    </v-row>
                 </v-col>
             </v-row>
             <v-row justify="center" class="mt-0 pt-0">
@@ -244,16 +250,14 @@ export default {
 <style scoped>
 .remaining-amount {
     position: relative;
-    top: -5px;
     font-size: 20px;
     font-weight: 500;
+    margin-top: 6px;
+    margin-bottom: 3px;
 }
 .v-btn {
     height: 33px;
     margin-right: 5px;
-}
-.save-cancel-btns {
-    margin-top: 10px;
 }
 .data-table {
     max-height: 400px;
