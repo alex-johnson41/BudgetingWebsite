@@ -30,7 +30,7 @@
                             <td style="width: 30%" class="pl-0">{{ item.date }}</td>
                             <td style="width: 20%" class="pa-0">{{ item.category.name }}</td>
                             <td style="width: 20%" class="pa-0">
-                                <v-chip density="compact" :color="item.category.is_income ? 'green' : 'red'" dark>
+                                <v-chip density="compact" :color="item.category.is_income ? 'green' : 'red'">
                                     {{ displayValue(item.amount) }}
                                 </v-chip>
                             </td>
