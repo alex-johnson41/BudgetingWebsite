@@ -1,92 +1,87 @@
 <!-- eslint-disable vue/valid-v-slot -->
 <template>
-    <v-row class="pt-0 mt-5" justify="center">
-        <v-col cols="5">
+    <v-card elevation="0" class="ma-0 pa-0">
+        <v-card-title style="font-size: 30px">Create Your Budget</v-card-title>
+        <v-card-text>
             <v-row>
-                <v-col cols="6">
+                <v-col cols="3">
                     <v-select
                         v-model="selectedMonth"
                         :items="months"
                         label="Select Month"
-                        dense
+                        density="compact"
                         item-title="text"
                         @update:modelValue="refreshTable"
                     ></v-select>
-                </v-col>
-                <v-col cols="6">
                     <v-select
                         v-model="selectedYear"
                         :items="years"
                         label="Select Year"
-                        dense
+                        density="compact"
                         @update:modelValue="refreshTable"
                     ></v-select>
                 </v-col>
+                <v-col cols="3">
+                    <p class="remaining-amount">Remaining Amount: ${{ totalRemainingAmount }}</p>
+                    <v-btn variant="outlined" color="green" @click="importBudget">Import From Last Month</v-btn>
+                    <v-btn class="save-cancel-btns" variant="outlined" color="red" @click="refreshTable">Cancel</v-btn>
+                    <v-btn class="save-cancel-btns" variant="outlined" color="primary" @click="save">Save</v-btn>
+                </v-col>
             </v-row>
-        </v-col>
-        <v-col cols="5">
-            <v-card>
-                <v-card-title>Total Remaining Amount</v-card-title>
-                <v-card-text>
-                    {{ totalRemainingAmount }}
-                </v-card-text>
-                <v-card-actions>
-                    <v-btn color="primary" @click="save">Save</v-btn>
-                    <v-btn color="secondary" @click="refreshTable">Cancel</v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-col>
-    </v-row>
-    <v-row class="pt-0 mt-5" justify="center">
-        <v-col cols="5">
-            <v-data-table-virtual
-                density="compact"
-                :headers="headers"
-                :items="incomeBudgets"
-                :sort-by="[{ key: 'name', order: 'asc' }]"
-            >
-                <template v-slot:top>
-                    <v-toolbar>
-                        <v-toolbar-title>Income</v-toolbar-title>
-                    </v-toolbar>
-                </template>
-                <template v-slot:[`item.amount`]="{ item }">
-                    <v-text-field
-                        v-model="item.amount"
-                        class="mt-0"
+            <v-row justify="center" class="mt-0 pt-0">
+                <v-col cols="6">
+                    <v-data-table-virtual
+                        class="data-table"
                         density="compact"
-                        single-line
-                        hide-details
-                        @blur="setDefault(item)"
-                    ></v-text-field>
-                </template>
-            </v-data-table-virtual>
-        </v-col>
-        <v-col cols="5">
-            <v-data-table-virtual
-                density="compact"
-                :headers="headers"
-                :items="expenseBudgets"
-                :sort-by="[{ key: 'name', order: 'asc' }]"
-            >
-                <template v-slot:top>
-                    <v-toolbar>
-                        <v-toolbar-title>Expenses</v-toolbar-title>
-                    </v-toolbar>
-                </template>
-                <template v-slot:[`item.amount`]="{ item }">
-                    <v-text-field
-                        v-model="item.amount"
-                        class="mt-0"
+                        :headers="headers"
+                        :items="incomeBudgets"
+                        :sort-by="[{ key: 'category.name', order: 'asc' }]"
+                    >
+                        <template v-slot:top>
+                            <v-toolbar>
+                                <v-toolbar-title>Income</v-toolbar-title>
+                            </v-toolbar>
+                        </template>
+                        <template v-slot:[`item.amount`]="{ item }">
+                            <v-text-field
+                                v-model="item.amount"
+                                class="mt-0"
+                                density="compact"
+                                single-line
+                                hide-details
+                                @blur="setDefault(item)"
+                            ></v-text-field>
+                        </template>
+                    </v-data-table-virtual>
+                </v-col>
+                <v-col cols="6">
+                    <v-data-table-virtual
+                        class="data-table"
                         density="compact"
-                        single-line
-                        hide-details
-                        @blur="setDefault(item)"
-                    ></v-text-field>
-                </template>
-            </v-data-table-virtual>
-        </v-col>
-    </v-row>
+                        :headers="headers"
+                        :items="expenseBudgets"
+                        :sort-by="[{ key: 'category.name', order: 'asc' }]"
+                    >
+                        <template v-slot:top>
+                            <v-toolbar>
+                                <v-toolbar-title>Expenses</v-toolbar-title>
+                            </v-toolbar>
+                        </template>
+                        <template v-slot:[`item.amount`]="{ item }">
+                            <v-text-field
+                                v-model="item.amount"
+                                class="mt-0"
+                                density="compact"
+                                single-line
+                                hide-details
+                                @blur="setDefault(item)"
+                            ></v-text-field>
+                        </template>
+                    </v-data-table-virtual>
+                </v-col>
+            </v-row>
+        </v-card-text>
+    </v-card>
 </template>
 <script>
 import _ from "underscore";
@@ -202,6 +197,18 @@ export default {
         setDefault(item) {
             if (item.amount == "") item.amount = 0;
         },
+        async importBudget() {
+            await this.$api
+                .get(`budget/user/1/filter?year=${this.selectedYear}&month=${this.selectedMonth - 1}`)
+                .then((response) => {
+                    if (response.length > 0) {
+                        this.budgets = response;
+                    } else {
+                        this.originalBudgets = [];
+                        this.initializeBudget();
+                    }
+                });
+        },
         save() {
             console.log(this.budgets);
             console.log(this.originalBudgets);
@@ -235,4 +242,21 @@ export default {
     },
 };
 </script>
-<style scoped></style>
+<style scoped>
+.remaining-amount {
+    position: relative;
+    top: -5px;
+    font-size: 20px;
+    font-weight: 500;
+}
+.v-btn {
+    height: 33px;
+    margin-right: 5px;
+}
+.save-cancel-btns {
+    margin-top: 10px;
+}
+.data-table {
+    max-height: 400px;
+}
+</style>
