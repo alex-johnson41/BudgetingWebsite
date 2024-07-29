@@ -2,31 +2,38 @@
     <v-card class="half-screen-card">
         <v-card-title class="title-container">
             Overview
-            <v-card-subtitle class="mt-2"> {{ currentDate }} </v-card-subtitle>
+            <v-card-subtitle class="mt-4"> {{ currentDate }} </v-card-subtitle>
         </v-card-title>
         <v-card-text class="flex-column">
-            <v-row>
-                <p class="ml-3 small-text">Remaining Funds:</p>
-            </v-row>
             <v-row justify="center">
-                <p style="font-size: 40px">${{ remainingFunds }}</p>
+                <v-col class="py-0">
+                    <p class="small-text text-center">Budgeted Remaining:</p>
+                    <p class="text-center" style="font-size: 30px">{{ displayValue(budgetRemaining) }}</p>
+                </v-col>
+                <v-col class="py-0">
+                    <p class="small-text text-center">Actual Remaining:</p>
+                    <p class="text-center" style="font-size: 30px">{{ displayValue(actualRemaining) }}</p>
+                </v-col>
             </v-row>
             <v-row>
-                <p class="ml-3 small-text">This months transactions:</p>
+                <p class="ml-3 mt-3 small-text">This months transactions:</p>
             </v-row>
             <div class="data-table-container">
                 <v-data-table-virtual
-                    :items="transactions"
+                    :items="sortedTransactions"
                     :headers="[]"
-                    :sort-by="[{ key: 'date', order: 'desc' }]"
                     density="compact"
                     style="background-color: lightgray"
                 >
                     <template v-slot:item="{ item }">
                         <tr>
-                            <td style="width: 20%" class="pl-0">{{ item.date }}</td>
+                            <td style="width: 30%" class="pl-0">{{ item.date }}</td>
                             <td style="width: 20%" class="pa-0">{{ item.category.name }}</td>
-                            <td style="width: 20%" class="pa-0">${{ item.amount }}</td>
+                            <td style="width: 20%" class="pa-0">
+                                <v-chip density="compact" :color="item.category.is_income ? 'green' : 'red'" dark>
+                                    {{ displayValue(item.amount) }}
+                                </v-chip>
+                            </td>
                         </tr>
                     </template>
                 </v-data-table-virtual>
@@ -36,6 +43,7 @@
 </template>
 
 <script>
+import { displayValue } from "@/utilities.js";
 export default {
     props: {
         budgets: {
@@ -50,15 +58,21 @@ export default {
     data() {
         return {
             currentDate: new Date().toLocaleDateString(),
-            remainingFunds: 0,
+            budgetRemaining: 0,
+            actualRemaining: 0,
+            sortedTransactions: [],
         };
     },
     mounted() {
         this.calculateRemainingFunds();
+        this.sortedTransactions = [...this.transactions].sort((a, b) => {
+            return new Date(b.date) - new Date(a.date);
+        });
     },
     methods: {
         calculateRemainingFunds() {
             let totalBudgeted = 0;
+            let totalIncome = 0;
             let totalSpent = 0;
             console.log(this.budgets);
             this.budgets.forEach((budget) => {
@@ -69,11 +83,15 @@ export default {
             this.transactions.forEach((transaction) => {
                 if (transaction.category.is_income == false) {
                     totalSpent += transaction.amount;
+                } else {
+                    totalIncome += transaction.amount;
                 }
             });
-            console.log(totalBudgeted);
-            console.log(totalSpent);
-            this.remainingFunds = (totalBudgeted - totalSpent).toFixed(2);
+            this.budgetRemaining = (totalBudgeted - totalSpent).toFixed(2);
+            this.actualRemaining = (totalIncome - totalSpent).toFixed(2);
+        },
+        displayValue(value) {
+            return displayValue(value);
         },
     },
 };
