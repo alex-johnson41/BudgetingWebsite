@@ -1,6 +1,6 @@
 <template>
     <v-card elevation="0" class="ma-0 pa-0">
-        <v-card-title style="font-size: 30px">Create Your Budget</v-card-title>
+        <v-card-title style="font-size: 30px">Create a budget</v-card-title>
         <v-card-text>
             <v-row>
                 <v-col cols="3">
@@ -113,7 +113,7 @@ export default {
         transactions: [],
         selectedMonth: new Date().getMonth() + 1,
         selectedYear: new Date().getFullYear(),
-        years: ["2020", "2021", "2022", "2023", "2024", "2025", "2026"], //TODO: HARD CODED YEARS
+        years: ["2022", "2023", "2024", "2025", "2026", "2027", "2028"], //TODO: HARD CODED YEARS
         months: [
             { text: "January", value: 1 },
             { text: "February", value: 2 },

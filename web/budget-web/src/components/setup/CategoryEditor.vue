@@ -1,53 +1,58 @@
 <!-- eslint-disable vue/valid-v-slot -->
 <template>
-    <v-row class="pt-0 mt-5" justify="center">
-        <v-col cols="8">
-            <v-data-table-virtual
-                density="compact"
-                height="500px"
-                :headers="headers"
-                :items="categories"
-                :sort-by="[{ key: 'name', order: 'asc' }]"
-            >
-                <template v-slot:top>
-                    <v-toolbar flat>
-                        <v-toolbar-title>Categories</v-toolbar-title>
-                        <v-spacer />
-                        <v-btn @click="openEditCategoryModal" variant="outlined" class="mr-5" color="primary" dark>
-                            <v-icon class="pr-3"> mdi-plus-box </v-icon>
-                            New Category
-                        </v-btn>
-                        <edit-category-modal
-                            v-model="dialog"
-                            :editedCategory="editedItem"
-                            :formTitle="formTitle"
-                            :categories="categories"
-                            @close="closeEditModal"
-                            @save="saveEditedOrNewItem"
-                        />
-                        <delete-category-modal
-                            v-model="dialogDelete"
-                            :categories="categories"
-                            :category="editedItem"
-                            :transactions="transactions"
-                            @closeDelete="closeDeleteModal"
-                            @deleteItemConfirm="deleteConfirmed"
-                        />
-                    </v-toolbar>
-                </template>
-                <template v-slot:item.name="{ item }">
-                    {{ item.name }}
-                </template>
-                <template v-slot:item.is_income="{ item }">
-                    {{ item.is_income ? "Income" : "Expense" }}
-                </template>
-                <template v-slot:item.actions="{ item }">
-                    <v-icon class="me-2" size="small" @click="openEditCategoryModal(item)"> mdi-pencil </v-icon>
-                    <v-icon size="small" @click="openDeleteCategoryModal(item)"> mdi-delete </v-icon>
-                </template>
-            </v-data-table-virtual>
-        </v-col>
-    </v-row>
+    <v-card elevation="0" class="ma-0 pa-0">
+        <v-card-title style="font-size: 30px">Customize your categories</v-card-title>
+        <v-card-text>
+            <v-row class="pt-0 mt-2" justify="center">
+                <v-col cols="8">
+                    <v-data-table-virtual
+                        density="compact"
+                        height="450px"
+                        :headers="headers"
+                        :items="categories"
+                        :sort-by="[{ key: 'name', order: 'asc' }]"
+                    >
+                        <template v-slot:top>
+                            <v-toolbar flat>
+                                <v-toolbar-title>Categories</v-toolbar-title>
+                                <v-spacer />
+                                <v-btn @click="openEditCategoryModal" variant="outlined" class="mr-5" color="primary" dark>
+                                    <v-icon class="pr-3"> mdi-plus-box </v-icon>
+                                    New Category
+                                </v-btn>
+                                <edit-category-modal
+                                    v-model="dialog"
+                                    :editedCategory="editedItem"
+                                    :formTitle="formTitle"
+                                    :categories="categories"
+                                    @close="closeEditModal"
+                                    @save="saveEditedOrNewItem"
+                                />
+                                <delete-category-modal
+                                    v-model="dialogDelete"
+                                    :categories="categories"
+                                    :category="editedItem"
+                                    :transactions="transactions"
+                                    @closeDelete="closeDeleteModal"
+                                    @deleteItemConfirm="deleteConfirmed"
+                                />
+                            </v-toolbar>
+                        </template>
+                        <template v-slot:item.name="{ item }">
+                            {{ item.name }}
+                        </template>
+                        <template v-slot:item.is_income="{ item }">
+                            {{ item.is_income ? "Income" : "Expense" }}
+                        </template>
+                        <template v-slot:item.actions="{ item }">
+                            <v-icon class="me-2" size="small" @click="openEditCategoryModal(item)"> mdi-pencil </v-icon>
+                            <v-icon size="small" @click="openDeleteCategoryModal(item)"> mdi-delete </v-icon>
+                        </template>
+                    </v-data-table-virtual>
+                </v-col>
+            </v-row>
+        </v-card-text>
+    </v-card>
 </template>
 <script>
 import EditCategoryModal from "@/components/setup/EditCategoryModal.vue";
