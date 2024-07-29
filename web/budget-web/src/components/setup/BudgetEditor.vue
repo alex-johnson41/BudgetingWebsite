@@ -114,7 +114,7 @@ export default {
         transactions: [],
         selectedMonth: new Date().getMonth() + 1,
         selectedYear: new Date().getFullYear(),
-        years: [],
+        years: ["2020", "2021", "2022", "2023", "2024", "2025", "2026"], //TODO: HARD CODED YEARS
         months: [
             { text: "January", value: 1 },
             { text: "February", value: 2 },
