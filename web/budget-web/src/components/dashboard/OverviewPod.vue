@@ -74,7 +74,6 @@ export default {
             let totalBudgeted = 0;
             let totalIncome = 0;
             let totalSpent = 0;
-            console.log(this.budgets);
             this.budgets.forEach((budget) => {
                 if (budget.category.is_income == false) {
                     totalBudgeted += budget.amount;

@@ -70,8 +70,4 @@ export default {
     height: 45vh;
     overflow: hidden;
 }
-.pod-spacing {
-    margin-top: 10px;
-    margin-left: 10px;
-}
 </style>
