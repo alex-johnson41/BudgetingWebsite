@@ -1,24 +1,38 @@
 <template>
     <v-container fluid v-if="dataInitialized" class="ma-0 pa-0">
-        <v-row style="height: 50%" class="mt-3 ml-3" no-gutters>
-            <v-col cols="3">
+        <v-row class="ma-0 pa-0" no-gutters>
+            <v-col cols="3" class="pa-2">
                 <overview-pod :transactions="transactions" :budgets="budgets" />
             </v-col>
-            <v-col cols="3"></v-col>
-            <v-col cols="6"></v-col>
+            <v-col cols="3" class="pa-2">
+                <small-summary-pod />
+            </v-col>
+            <v-col cols="6" class="pa-2">
+                <large-summary-pod />
+            </v-col>
         </v-row>
-        <v-row style="height: 50%" no-gutters>
-            <v-col cols="3"></v-col>
-            <v-col cols="9"></v-col>
+        <v-row class="ma-0 pa-0" no-gutters>
+            <v-col cols="3" class="pa-2">
+                <small-summary-pod />
+            </v-col>
+            <v-col cols="9" class="pa-2">
+                <bar-chart-comparison-pod />
+            </v-col>
         </v-row>
     </v-container>
 </template>
 <script>
 import OverviewPod from "@/components/dashboard/OverviewPod.vue";
+import BarChartComparisonPod from "@/components/dashboard/BarChartComparisonPod.vue";
+import LargeSummaryPod from "@/components/dashboard/LargeSummaryPod.vue";
+import SmallSummaryPod from "@/components/dashboard/SmallSummaryPod.vue";
 
 export default {
     components: {
         OverviewPod,
+        BarChartComparisonPod,
+        LargeSummaryPod,
+        SmallSummaryPod,
     },
     data: () => ({
         budgets: [],
@@ -55,5 +69,9 @@ export default {
 .half-screen-height {
     height: 45vh;
     overflow: hidden;
+}
+.pod-spacing {
+    margin-top: 10px;
+    margin-left: 10px;
 }
 </style>

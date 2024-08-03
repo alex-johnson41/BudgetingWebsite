@@ -87,8 +87,8 @@ export default {
                     totalIncome += transaction.amount;
                 }
             });
-            this.budgetRemaining = (totalBudgeted - totalSpent).toFixed(2);
-            this.actualRemaining = (totalIncome - totalSpent).toFixed(2);
+            this.budgetRemaining = totalBudgeted - totalSpent;
+            this.actualRemaining = totalIncome - totalSpent;
         },
         displayValue(value) {
             return displayValue(value);
@@ -105,10 +105,10 @@ export default {
     font-size: 30px;
 }
 .small-text {
-    font-size: 15px;
+    font-size: 13px;
 }
 .half-screen-card {
-    height: 45vh;
+    height: 42vh;
     display: flex;
     flex-direction: column;
     background-color: lightgray;
@@ -123,7 +123,7 @@ export default {
 }
 .data-table-container {
     margin-top: 15px;
-    flex-grow: 1; /* Allow the container to grow and take up remaining space */
-    overflow: auto; /* Ensure overflow is set to auto */
+    flex-grow: 1;
+    overflow: auto;
 }
 </style>
