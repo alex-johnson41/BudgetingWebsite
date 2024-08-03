@@ -16,7 +16,7 @@
                 <small-summary-pod />
             </v-col>
             <v-col cols="9" class="pa-2">
-                <bar-chart-comparison-pod />
+                <bar-chart-comparison-pod :budgets="budgets" :categories="categories" :transactions="transactions" />
             </v-col>
         </v-row>
     </v-container>
@@ -38,7 +38,7 @@ export default {
         budgets: [],
         categories: [],
         transactions: [],
-        selectedMonth: new Date().getMonth() + 1,
+        selectedMonth: new Date().getMonth(),
         selectedYear: new Date().getFullYear(),
         dataInitialized: false,
     }),
