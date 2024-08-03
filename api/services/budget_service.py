@@ -28,5 +28,8 @@ class BudgetService:
     def create(self, budget: BudgetCreate) -> BudgetPublic:
         return self.repository.create(budget)
 
+    def create_many(self, budgets: list[BudgetCreate]) -> list[BudgetPublicCategory]:
+        return self.repository.create_many(budgets)
+
     def delete(self, budget_id: int) -> BudgetPublic:
         return self.repository.delete(budget_id)

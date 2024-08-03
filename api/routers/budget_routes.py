@@ -41,6 +41,12 @@ def create_budget(budget: BudgetCreate, session: Session = Depends(get_session))
     return _service.create(budget)
 
 
+@router.post("/many", response_model=list[BudgetPublicCategory])
+def create_many_budgets(budgets: list[BudgetCreate], session: Session = Depends(get_session)):
+    _service = BudgetService(session)
+    return _service.create_many(budgets)
+
+
 @router.delete("/{id}", response_model=BudgetPublicCategory)
 def delete_budget(id: int, session: Session = Depends(get_session)):
     _service = BudgetService(session)

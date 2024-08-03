@@ -13,6 +13,7 @@
         "axios": "^1.7.2",
         "core-js": "^3.8.3",
         "lodash.clonedeep": "^4.5.0",
+        "primevue": "^4.0.4",
         "roboto-fontface": "*",
         "underscore": "^1.13.6",
         "vue": "^3.2.13",

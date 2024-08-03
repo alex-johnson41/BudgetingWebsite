@@ -36,6 +36,13 @@ class BudgetRepository(BaseRepository):
         self.session.refresh(budget)
         return budget
 
+    def create_many(self, budgets: list[BudgetCreate]) -> list[BudgetPublicCategory]:
+        created_budgets = []
+        for budget in budgets:
+            created_budget = self.create(budget)
+            created_budgets.append(created_budget)
+        return created_budgets
+
     def delete(self, budget_id: int) -> BudgetPublic:
         budget = self.session.get(Budget, budget_id)
         self.session.delete(budget)

@@ -41,6 +41,7 @@
                         :headers="headers"
                         :items="incomeBudgets"
                         :sort-by="[{ key: 'category.name', order: 'asc' }]"
+                        item-key="index"
                     >
                         <template v-slot:top>
                             <v-toolbar>
@@ -66,6 +67,7 @@
                         :headers="headers"
                         :items="expenseBudgets"
                         :sort-by="[{ key: 'category.name', order: 'asc' }]"
+                        item-key="index"
                     >
                         <template v-slot:top>
                             <v-toolbar>
@@ -173,7 +175,6 @@ export default {
     },
     methods: {
         async refreshTable() {
-            console.log(this.selectedMonth);
             await this.$api.get(`budget/user/1/filter?year=${this.selectedYear}&month=${this.selectedMonth}`).then((response) => {
                 this.originalBudgets = response;
             }); // TODO: HARD CODED USER ID
@@ -207,6 +208,9 @@ export default {
                 .get(`budget/user/1/filter?year=${this.selectedYear}&month=${this.selectedMonth - 1}`)
                 .then((response) => {
                     if (response.length > 0) {
+                        response.forEach((budget) => {
+                            budget.id = -1;
+                        });
                         this.budgets = response;
                     } else {
                         this.originalBudgets = [];
@@ -214,19 +218,17 @@ export default {
                     }
                 });
         },
-        save() {
-            console.log(this.budgets);
-            console.log(this.originalBudgets);
-            const promises = this.budgets.forEach(async (budget) => {
+        async save() {
+            let newBudgets = [];
+            this.budgets.forEach(async (budget) => {
                 if (budget.id === -1) {
-                    const newBudget = {
+                    newBudgets.push({
                         user_id: budget.user_id,
                         category_id: budget.category_id,
                         amount: budget.amount,
                         month: this.selectedMonth,
                         year: this.selectedYear,
-                    };
-                    await this.$api.post("budget", newBudget);
+                    });
                 } else {
                     const originalBudget = this.originalBudgets.find((b) => b.id === budget.id);
                     if (_.isEqual(originalBudget, budget) == false) {
@@ -237,7 +239,8 @@ export default {
                     }
                 }
             });
-            Promise.all(promises).then(async () => {
+            await this.$api.post("budget/many", newBudgets);
+            this.$nextTick(async () => {
                 await this.refreshTable();
             });
         },
