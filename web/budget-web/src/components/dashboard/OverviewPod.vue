@@ -19,12 +19,7 @@
                 <p class="ml-3 mt-3 small-text">This months transactions:</p>
             </v-row>
             <div class="data-table-container">
-                <v-data-table-virtual
-                    :items="sortedTransactions"
-                    :headers="[]"
-                    density="compact"
-                    style="background-color: lightgray"
-                >
+                <v-data-table-virtual :items="sortedTransactions" :headers="[]" density="compact" class="data-table">
                     <template v-slot:item="{ item }">
                         <tr>
                             <td style="width: 30%" class="pl-0">{{ item.date }}</td>
@@ -96,7 +91,8 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import "@/styles.scss";
 .title-container {
     display: flex;
     justify-content: space-between;
@@ -110,7 +106,7 @@ export default {
     height: 42vh;
     display: flex;
     flex-direction: column;
-    background-color: lightgray;
+    background-color: $primary;
     border-radius: 20px;
 }
 .flex-column {
@@ -120,7 +116,11 @@ export default {
     overflow: hidden;
     padding-top: 10px;
 }
+.data-table {
+    background-color: $secondary;
+}
 .data-table-container {
+    background-color: $primary;
     margin-top: 15px;
     flex-grow: 1;
     overflow: auto;

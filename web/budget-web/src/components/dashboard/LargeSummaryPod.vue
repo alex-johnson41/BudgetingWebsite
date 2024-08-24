@@ -10,11 +10,15 @@
                         :options="chartOptions"
                         class="chart-container w-full md:w-[30rem]"
                     />
+                    <div class="text-center total-spent">
+                        <p class="text-h6">Total Spent:</p>
+                        <p class="text-h4">{{ displayValue(totalSpent) }}</p>
+                    </div>
                 </v-col>
                 <v-col cols="6">
                     <div class="category-list">
                         <div v-for="category in categories" :key="category.id">
-                            <v-row v-if="calculateTotal(category.id) > 0">
+                            <v-row v-if="calculateTotal(category.id) > 0 && category.is_income == false">
                                 <v-col cols="2">
                                     <div class="square pa-0" :style="{ backgroundColor: category.color }"></div>
                                 </v-col>
@@ -52,7 +56,12 @@ export default {
     },
     computed: {
         totalSpent() {
-            return this.transactions.reduce((acc, transaction) => acc + transaction.amount, 0);
+            return this.transactions
+                .filter((transaction) => {
+                    const category = this.categories.find((cat) => cat.id === transaction.category_id);
+                    return category && !category.is_income;
+                })
+                .reduce((acc, transaction) => acc + transaction.amount, 0);
         },
         expenseCategories() {
             return this.categories.filter((category) => !category.is_income);
@@ -132,11 +141,17 @@ export default {
     margin: auto;
 }
 .chart-container {
+    z-index: 10;
     height: 35vh;
 }
 .category-list {
-    max-height: 70%;
+    max-height: 80%;
     overflow-y: auto;
     overflow-x: hidden;
+}
+.total-spent {
+    position: absolute;
+    top: 40%;
+    left: 14.5%;
 }
 </style>

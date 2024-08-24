@@ -56,7 +56,6 @@ export default {
                 });
         },
         setChartData() {
-            const documentStyle = getComputedStyle(document.documentElement);
             let data = this.createChartData();
             console.log(data);
             return {
@@ -64,14 +63,14 @@ export default {
                 datasets: [
                     {
                         label: "Budgeted",
-                        backgroundColor: documentStyle.getPropertyValue("--p-cyan-500"),
-                        borderColor: documentStyle.getPropertyValue("--p-cyan-500"),
+                        backgroundColor: "#2196F3", // Blue color
+                        borderColor: "#2196F3", // Blue color
                         data: data.map((category) => category.budgeted),
                     },
                     {
                         label: "Actual",
-                        backgroundColor: documentStyle.getPropertyValue("--p-gray-500"),
-                        borderColor: documentStyle.getPropertyValue("--p-gray-500"),
+                        backgroundColor: "#FF9800", // Orange color
+                        borderColor: "#FF9800", // Orange color
                         data: data.map((category) => category.actual),
                     },
                 ],
