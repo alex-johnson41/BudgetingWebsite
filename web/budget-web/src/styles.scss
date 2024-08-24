@@ -1,0 +1,11 @@
+$primary: #ffffff;
+$secondary: rgba(23, 191, 185, 0.474);
+$tertiary: #49545aff;
+$accent: #a77e58ff;
+
+.btn-primary {
+    background-color: $primary;
+}
+.btn-secondary {
+    background-color: $secondary;
+}

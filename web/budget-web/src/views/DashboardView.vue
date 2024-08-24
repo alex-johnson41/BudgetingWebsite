@@ -1,22 +1,22 @@
-<template>
-    <v-container fluid v-if="dataInitialized" class="ma-0 pa-0">
+<template class="background">
+    <v-container fluid v-if="dataInitialized" class="ma-0 pa-0 dashboard">
         <v-row class="ma-0 pa-0" no-gutters>
             <v-col cols="3" class="pa-2">
-                <overview-pod :transactions="transactions" :budgets="budgets" />
+                <overview-pod :transactions="transactions" :budgets="budgets" class="pod" />
             </v-col>
             <v-col cols="3" class="pa-2">
-                <small-summary-pod />
+                <small-summary-pod class="pod" />
             </v-col>
             <v-col cols="6" class="pa-2">
-                <large-summary-pod />
+                <large-summary-pod class="pod" :transactions="transactions" :categories="categories" />
             </v-col>
         </v-row>
         <v-row class="ma-0 pa-0" no-gutters>
             <v-col cols="3" class="pa-2">
-                <small-summary-pod />
+                <small-summary-pod class="pod" />
             </v-col>
             <v-col cols="9" class="pa-2">
-                <bar-chart-comparison-pod :budgets="budgets" :categories="categories" :transactions="transactions" />
+                <bar-chart-comparison-pod :budgets="budgets" :categories="categories" :transactions="transactions" class="pod" />
             </v-col>
         </v-row>
     </v-container>
@@ -38,7 +38,7 @@ export default {
         budgets: [],
         categories: [],
         transactions: [],
-        selectedMonth: new Date().getMonth(),
+        selectedMonth: new Date().getMonth() + 1,
         selectedYear: new Date().getFullYear(),
         dataInitialized: false,
     }),
@@ -65,9 +65,13 @@ export default {
     },
 };
 </script>
-<style scoped>
+<style scoped lang="scss">
+@import "@/styles.scss";
 .half-screen-height {
     height: 45vh;
     overflow: hidden;
+}
+.pod {
+    background-color: $secondary;
 }
 </style>

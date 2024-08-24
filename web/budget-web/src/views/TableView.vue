@@ -1,95 +1,97 @@
 <template>
-    <v-row class="ml-10 mt-5 mb-0" width="100%">
-        <div class="d-flex align-end" style="width: 20%">
-            <p class="mr-2"><b>Select Year:</b></p>
-            <v-select
-                variant="underlined"
-                v-model="selectedYear"
-                :items="years"
-                @update:modelValue="getData()"
-                class="pa-0 ma-0"
-                density="compact"
-                solo
-                hide-details
-            >
-            </v-select>
-        </div>
-    </v-row>
-    <v-row class="mx-10 mb-10 mt-0">
-        <table width="100%">
-            <thead>
-                <tr>
-                    <th width="15%">Categories</th>
-                    <th v-for="month in horizontalHeaders" :key="month" width="6.5%">
-                        {{ month }}
-                    </th>
-                    <th>Total</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr style="background-color: lightgreen">
-                    <td>INCOME</td>
-                    <td v-for="month in horizontalHeaders" :key="month"></td>
-                    <td></td>
-                </tr>
-                <tr v-for="category in incomeHeaders" :key="category.id">
-                    <td>{{ category.name }}</td>
-                    <td v-for="month in horizontalHeaders" :key="month" style="text-align: right">
-                        {{ displayValue(calculateCellTotal(category.id, monthToNum(month))) }}
-                    </td>
-                    <td style="text-align: right">
-                        {{ displayValue(calculateCategoryTotal(category.id)) }}
-                    </td>
-                </tr>
-                <tr style="background-color: lightcoral">
-                    <td>EXPENSES</td>
-                    <td v-for="month in horizontalHeaders" :key="month"></td>
-                    <td></td>
-                </tr>
-                <tr v-for="category in expenseHeaders" :key="category.id">
-                    <td>{{ category.name }}</td>
-                    <td v-for="month in horizontalHeaders" :key="month" style="text-align: right">
-                        {{ displayValue(calculateCellTotal(category.id, monthToNum(month))) }}
-                    </td>
-                    <td style="text-align: right">
-                        {{ displayValue(calculateCategoryTotal(category.id)) }}
-                    </td>
-                </tr>
-                <tr style="background-color: lightblue">
-                    <td>TOTALS</td>
-                    <td v-for="month in horizontalHeaders" :key="month"></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>Income:</td>
-                    <td v-for="month in horizontalHeaders" :key="month" style="text-align: right">
-                        {{ displayValue(calculateMonthTotal(monthToNum(month), true)) }}
-                    </td>
-                    <td style="text-align: right">{{ displayValue(calculateTotal(true)) }}</td>
-                </tr>
-                <tr>
-                    <td>Expenses:</td>
-                    <td v-for="month in horizontalHeaders" :key="month" style="text-align: right">
-                        {{ displayValue(calculateMonthTotal(monthToNum(month), false)) }}
-                    </td>
-                    <td style="text-align: right">{{ displayValue(calculateTotal(false)) }}</td>
-                </tr>
-                <tr>
-                    <td>Net:</td>
-                    <td v-for="month in horizontalHeaders" :key="month" style="text-align: right">
-                        {{
-                            displayValue(
-                                calculateMonthTotal(monthToNum(month), true) - calculateMonthTotal(monthToNum(month), false)
-                            )
-                        }}
-                    </td>
-                    <td style="text-align: right">
-                        {{ displayValue(calculateTotal(true) - calculateTotal(false)) }}
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </v-row>
+    <v-sheet class="ma-0 pa-0 primary">
+        <v-row class="ml-10 mb-0" width="100%">
+            <div class="d-flex align-end mt-5" style="width: 20%">
+                <p class="mr-2"><b>Select Year:</b></p>
+                <v-select
+                    variant="underlined"
+                    v-model="selectedYear"
+                    :items="years"
+                    @update:modelValue="getData()"
+                    class="pa-0 ma-0"
+                    density="compact"
+                    solo
+                    hide-details
+                >
+                </v-select>
+            </div>
+        </v-row>
+        <v-row class="mx-10 mb-10 mt-0">
+            <table width="100%">
+                <thead>
+                    <tr>
+                        <th width="15%">Categories</th>
+                        <th v-for="month in horizontalHeaders" :key="month" width="6.5%">
+                            {{ month }}
+                        </th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="background-color: lightgreen">
+                        <td>INCOME</td>
+                        <td v-for="month in horizontalHeaders" :key="month"></td>
+                        <td></td>
+                    </tr>
+                    <tr v-for="category in incomeHeaders" :key="category.id">
+                        <td>{{ category.name }}</td>
+                        <td v-for="month in horizontalHeaders" :key="month" style="text-align: right">
+                            {{ displayValue(calculateCellTotal(category.id, monthToNum(month))) }}
+                        </td>
+                        <td style="text-align: right">
+                            {{ displayValue(calculateCategoryTotal(category.id)) }}
+                        </td>
+                    </tr>
+                    <tr style="background-color: lightcoral">
+                        <td>EXPENSES</td>
+                        <td v-for="month in horizontalHeaders" :key="month"></td>
+                        <td></td>
+                    </tr>
+                    <tr v-for="category in expenseHeaders" :key="category.id">
+                        <td>{{ category.name }}</td>
+                        <td v-for="month in horizontalHeaders" :key="month" style="text-align: right">
+                            {{ displayValue(calculateCellTotal(category.id, monthToNum(month))) }}
+                        </td>
+                        <td style="text-align: right">
+                            {{ displayValue(calculateCategoryTotal(category.id)) }}
+                        </td>
+                    </tr>
+                    <tr style="background-color: lightblue">
+                        <td>TOTALS</td>
+                        <td v-for="month in horizontalHeaders" :key="month"></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Income:</td>
+                        <td v-for="month in horizontalHeaders" :key="month" style="text-align: right">
+                            {{ displayValue(calculateMonthTotal(monthToNum(month), true)) }}
+                        </td>
+                        <td style="text-align: right">{{ displayValue(calculateTotal(true)) }}</td>
+                    </tr>
+                    <tr>
+                        <td>Expenses:</td>
+                        <td v-for="month in horizontalHeaders" :key="month" style="text-align: right">
+                            {{ displayValue(calculateMonthTotal(monthToNum(month), false)) }}
+                        </td>
+                        <td style="text-align: right">{{ displayValue(calculateTotal(false)) }}</td>
+                    </tr>
+                    <tr>
+                        <td>Net:</td>
+                        <td v-for="month in horizontalHeaders" :key="month" style="text-align: right">
+                            {{
+                                displayValue(
+                                    calculateMonthTotal(monthToNum(month), true) - calculateMonthTotal(monthToNum(month), false)
+                                )
+                            }}
+                        </td>
+                        <td style="text-align: right">
+                            {{ displayValue(calculateTotal(true) - calculateTotal(false)) }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </v-row>
+    </v-sheet>
 </template>
 
 <script>
@@ -200,11 +202,15 @@ export default {
     },
 };
 </script>
-<style scoped>
+<style scoped lang="scss">
+@import "@/styles.scss";
 table,
 th,
 td {
     border: 1px solid black;
     border-collapse: collapse;
+}
+.primary {
+    background-color: $primary;
 }
 </style>

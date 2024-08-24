@@ -1,8 +1,8 @@
 <!-- eslint-disable vue/valid-v-slot -->
 <template>
-    <v-row class="pt-0 mt-10" justify="center">
+    <v-row class="pt-0" justify="center">
         <v-col cols="6">
-            <v-data-table :headers="headers" :items="transactions" :sort-by="[{ key: 'date', order: 'desc' }]">
+            <v-data-table :headers="headers" :items="transactions" :sort-by="[{ key: 'date', order: 'desc' }]" class="mt-10">
                 <template v-slot:top>
                     <v-toolbar flat>
                         <v-toolbar-title>Recent Transactions</v-toolbar-title>

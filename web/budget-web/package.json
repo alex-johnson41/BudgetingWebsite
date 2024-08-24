@@ -16,6 +16,7 @@
         "lodash.clonedeep": "^4.5.0",
         "primevue": "^4.0.4",
         "roboto-fontface": "*",
+        "sass": "^1.77.8",
         "underscore": "^1.13.6",
         "vue": "^3.2.13",
         "vue-router": "^4.4.0",

@@ -1,6 +1,6 @@
 <template>
     <v-app>
-        <v-app-bar :elevation="2">
+        <v-app-bar :elevation="2" class="header">
             <template v-slot:prepend>
                 <v-app-bar-title class="ml-9">Budgeting Website</v-app-bar-title>
                 <v-btn-toggle class="ml-10" rounded="4" group variant="outlined">
@@ -16,7 +16,7 @@
             </template>
         </v-app-bar>
         <v-main>
-            <router-view />
+            <router-view class="page" />
         </v-main>
     </v-app>
 </template>
@@ -35,3 +35,13 @@ export default {
     }),
 };
 </script>
+<style scoped lang="scss">
+@import "@/styles.scss";
+.header {
+    background-color: $primary !important;
+}
+.page {
+    background-color: $primary;
+    height: 100%;
+}
+</style>
