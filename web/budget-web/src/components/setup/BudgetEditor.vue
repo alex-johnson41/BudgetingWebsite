@@ -142,7 +142,7 @@ export default {
     },
     computed: {
         totalRemainingAmount() {
-            return this.totalBudgetedIncome - this.totalBudgetedExpense;
+            return (this.totalBudgetedIncome - this.totalBudgetedExpense).toFixed(2);
         },
         totalBudgetedIncome() {
             return _.reduce(
