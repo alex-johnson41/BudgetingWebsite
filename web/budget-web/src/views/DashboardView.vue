@@ -1,5 +1,20 @@
 <template class="background">
     <v-container fluid v-if="dataInitialized" class="ma-0 pa-0 dashboard">
+        <v-select
+            v-model="selectedMonth"
+            :items="months"
+            label="Select Month"
+            density="compact"
+            item-title="text"
+            @update:modelValue="initializeData"
+        ></v-select>
+        <v-select
+            v-model="selectedYear"
+            :items="years"
+            label="Select Year"
+            density="compact"
+            @update:modelValue="initializeData"
+        ></v-select>
         <v-row class="ma-0 pa-0" no-gutters>
             <v-col cols="3" class="pa-2">
                 <overview-pod :transactions="transactions" :budgets="budgets" class="pod" />
@@ -12,9 +27,7 @@
             </v-col>
         </v-row>
         <v-row class="ma-0 pa-0" no-gutters>
-            <v-col cols="3" class="pa-2">
-                <small-summary-pod class="pod" />
-            </v-col>
+            <v-col cols="3" class="pa-2"> <small-summary-pod class="pod" />`` </v-col>
             <v-col cols="9" class="pa-2">
                 <bar-chart-comparison-pod :budgets="budgets" :categories="categories" :transactions="transactions" class="pod" />
             </v-col>
@@ -41,6 +54,21 @@ export default {
         selectedMonth: new Date().getMonth() + 1,
         selectedYear: new Date().getFullYear(),
         dataInitialized: false,
+        years: ["2022", "2023", "2024", "2025", "2026", "2027", "2028"], //TODO: HARD CODED YEARS
+        months: [
+            { text: "January", value: 1 },
+            { text: "February", value: 2 },
+            { text: "March", value: 3 },
+            { text: "April", value: 4 },
+            { text: "May", value: 5 },
+            { text: "June", value: 6 },
+            { text: "July", value: 7 },
+            { text: "August", value: 8 },
+            { text: "September", value: 9 },
+            { text: "October", value: 10 },
+            { text: "November", value: 11 },
+            { text: "December", value: 12 },
+        ],
     }),
     computed: {},
     mounted() {

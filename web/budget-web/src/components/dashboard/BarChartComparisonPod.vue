@@ -27,6 +27,20 @@ export default {
             required: true,
         },
     },
+    watch: {
+        budgets: {
+            handler() {
+                this.chartData = this.setChartData();
+            },
+            deep: true,
+        },
+        transactions: {
+            handler() {
+                this.chartData = this.setChartData();
+            },
+            deep: true,
+        },
+    },
     data() {
         return {
             chartData: null,

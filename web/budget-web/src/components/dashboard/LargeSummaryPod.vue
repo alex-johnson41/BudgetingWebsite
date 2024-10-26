@@ -54,6 +54,14 @@ export default {
     mounted() {
         this.assignCategoryColors();
     },
+    watch: {
+        transactions: {
+            handler() {
+                this.assignCategoryColors();
+            },
+            deep: true,
+        },
+    },
     computed: {
         totalSpent() {
             return this.transactions
