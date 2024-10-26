@@ -23,7 +23,7 @@ class TransactionRepository(BaseRepository):
                 extract('month', Transaction.date) == int(filters['month']))
         if filters['day'] is not None:
             query = query.where(
-                extract('day', Transaction.date) == int(filters['day']))
+                extract('day', Transaction.date) <= int(filters['day']))
         if filters['category_id'] is not None:
             query = query.where(Transaction.category_id ==
                                 filters['category_id'])

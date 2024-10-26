@@ -20,6 +20,16 @@
                                 return-object
                             ></v-select>
                         </v-col>
+                        <v-col cols="12" md="6" sm="6">
+                            <v-select
+                                variant="outlined"
+                                v-model="item.group"
+                                label="Group"
+                                :items="groupOptions"
+                                item-title="name"
+                                return-object
+                            ></v-select>
+                        </v-col>
                     </v-row>
                 </v-container>
             </v-card-text>
@@ -46,6 +56,7 @@ export default {
             { name: "Income", value: true },
             { name: "Expense", value: false },
         ],
+        groupOptions: ["Wants", "Needs", "Giving", "Savings", "Debt"],
     }),
     computed: {
         item() {

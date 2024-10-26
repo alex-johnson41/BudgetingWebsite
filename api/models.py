@@ -119,6 +119,7 @@ class CategoryBase(SQLModel):
     user_id: int | None = Field(default=None, foreign_key="user.id")
     name: str = Field()
     is_income: bool = Field(default=False)
+    group: str | None = Field(default=None)
 
 
 class Category(CategoryBase, table=True):
@@ -151,6 +152,7 @@ class CategoryUpdate(SQLModel):
     name: str | None = None
     user_id: int | None = None
     is_income: bool | None = None
+    group: str | None = None
 
 
 """

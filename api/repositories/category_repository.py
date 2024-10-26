@@ -21,6 +21,8 @@ class CategoryRepository(BaseRepository):
                 query = query.where(Category.is_income)
             else:
                 query = query.where(Category.is_income == False)
+        if filters['group'] is not None:
+            query = query.where(Category.group == filters['group'])
         return self.session.exec(query).all()
 
     def update(self, id: int, category: CategoryUpdate) -> CategoryPublic:

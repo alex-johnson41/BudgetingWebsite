@@ -74,6 +74,7 @@ export default {
                 key: "name",
             },
             { title: "Income or Expense", key: "is_income" },
+            { title: "Group", key: "group" },
             { title: "Actions", key: "actions", sortable: false },
         ],
         categories: [],
@@ -81,10 +82,12 @@ export default {
         editedItem: {
             name: "",
             is_income: undefined,
+            group: null,
         },
         defaultItem: {
             name: "",
             is_income: undefined,
+            group: null,
         },
         transactions: [],
     }),

@@ -1,8 +1,17 @@
 <template>
     <v-card class="half-screen-card">
-        <v-card-title class="title-container">
-            Overview
-            <v-card-subtitle class="mt-4"> {{ currentDate }} </v-card-subtitle>
+        <v-card-title class="title-container" style="display: flex">
+            <span>Overview</span>
+            <v-date-input
+                variant="outlined"
+                v-model="currentDate"
+                label="Select a date"
+                prepend-icon=""
+                prepend-inner-icon="$calendar"
+                density="compact"
+                hide-details="true"
+                @update:model-value="updateDate"
+            ></v-date-input>
         </v-card-title>
         <v-card-text class="flex-column">
             <v-row justify="center">
@@ -39,7 +48,11 @@
 
 <script>
 import { displayValue } from "@/utilities.js";
+import { VDateInput } from "vuetify/lib/labs/components.mjs";
 export default {
+    components: {
+        VDateInput,
+    },
     props: {
         budgets: {
             type: Array,
@@ -52,7 +65,7 @@ export default {
     },
     data() {
         return {
-            currentDate: new Date().toLocaleDateString(),
+            currentDate: new Date(),
             budgetRemaining: 0,
             actualRemaining: 0,
             sortedTransactions: [],
@@ -94,6 +107,9 @@ export default {
         },
         displayValue(value) {
             return displayValue(value);
+        },
+        updateDate() {
+            this.$emit("update-date", this.currentDate);
         },
     },
 };

@@ -1,23 +1,8 @@
 <template class="background">
     <v-container fluid v-if="dataInitialized" class="ma-0 pa-0 dashboard">
-        <v-select
-            v-model="selectedMonth"
-            :items="months"
-            label="Select Month"
-            density="compact"
-            item-title="text"
-            @update:modelValue="initializeData"
-        ></v-select>
-        <v-select
-            v-model="selectedYear"
-            :items="years"
-            label="Select Year"
-            density="compact"
-            @update:modelValue="initializeData"
-        ></v-select>
         <v-row class="ma-0 pa-0" no-gutters>
             <v-col cols="3" class="pa-2">
-                <overview-pod :transactions="transactions" :budgets="budgets" class="pod" />
+                <overview-pod :transactions="transactions" :budgets="budgets" class="pod" @update-date="updateDate" />
             </v-col>
             <v-col cols="3" class="pa-2">
                 <small-summary-pod class="pod" />
@@ -53,6 +38,7 @@ export default {
         transactions: [],
         selectedMonth: new Date().getMonth() + 1,
         selectedYear: new Date().getFullYear(),
+        selectedDay: new Date().getDate(),
         dataInitialized: false,
         years: ["2022", "2023", "2024", "2025", "2026", "2027", "2028"], //TODO: HARD CODED YEARS
         months: [
@@ -83,12 +69,20 @@ export default {
                 this.$api.get(`budget/user/1/filter?year=${this.selectedYear}&month=${this.selectedMonth}`).then((response) => {
                     this.budgets = response;
                 }), // TODO: HARD CODED USER ID
-                this.$api.get(`transaction/1/filter?year=${this.selectedYear}&month=${this.selectedMonth}`).then((response) => {
-                    this.transactions = response;
-                }), // TODO: HARD CODED USER ID
+                this.$api
+                    .get(`transaction/1/filter?year=${this.selectedYear}&month=${this.selectedMonth}&day=${this.selectedDay}`)
+                    .then((response) => {
+                        this.transactions = response;
+                    }), // TODO: HARD CODED USER ID
             ]).then(() => {
                 this.dataInitialized = true;
             });
+        },
+        updateDate(date) {
+            this.selectedMonth = date.getMonth() + 1;
+            this.selectedYear = date.getFullYear();
+            this.selectedDay = date.getDate();
+            this.initializeData();
         },
     },
 };
