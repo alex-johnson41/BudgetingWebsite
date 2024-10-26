@@ -58,6 +58,14 @@ export default {
             sortedTransactions: [],
         };
     },
+    watch: {
+        transactions: {
+            handler() {
+                this.calculateRemainingFunds();
+            },
+            deep: true,
+        },
+    },
     mounted() {
         this.calculateRemainingFunds();
         this.sortedTransactions = [...this.transactions].sort((a, b) => {
