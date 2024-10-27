@@ -5,14 +5,16 @@
                 <overview-pod :transactions="transactions" :budgets="budgets" class="pod" @update-date="updateDate" />
             </v-col>
             <v-col cols="3" class="pa-2">
-                <small-summary-pod class="pod" />
+                <small-summary-pod :transactions="transactions" :categories="categories" class="pod" />
             </v-col>
             <v-col cols="6" class="pa-2">
                 <large-summary-pod class="pod" :transactions="transactions" :categories="categories" />
             </v-col>
         </v-row>
         <v-row class="ma-0 pa-0" no-gutters>
-            <v-col cols="3" class="pa-2"> <small-summary-pod class="pod" />`` </v-col>
+            <v-col cols="3" class="pa-2">
+                <small-summary-pod :transactions="transactions" :categories="categories" class="pod" />
+            </v-col>
             <v-col cols="9" class="pa-2">
                 <bar-chart-comparison-pod :budgets="budgets" :categories="categories" :transactions="transactions" class="pod" />
             </v-col>

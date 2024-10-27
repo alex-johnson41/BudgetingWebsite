@@ -79,7 +79,9 @@ export default {
                 labels: this.expenseCategories.map((category) => category.name),
                 datasets: [
                     {
-                        data: this.expenseCategories.map((category) => this.calculateTotal(category.id)),
+                        data: this.expenseCategories.map(
+                            (category) => (this.calculateTotal(category.id) / this.totalSpent) * 100
+                        ),
                         backgroundColor: this.expenseCategories.map((category) => category.color),
                     },
                 ],
@@ -88,6 +90,18 @@ export default {
         chartOptions() {
             return {
                 plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                let label = context.dataset.label || "";
+                                if (label) {
+                                    label += ": ";
+                                }
+                                label += context.raw.toFixed(2) + "%";
+                                return label;
+                            },
+                        },
+                    },
                     legend: {
                         display: false,
                     },
