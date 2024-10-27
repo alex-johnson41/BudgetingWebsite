@@ -1,9 +1,7 @@
 from sqlmodel import SQLModel, create_engine
+from api import secrets
 
-
-file_name = "api/database/database.db"
-sqlite_url = f"sqlite:///{file_name}"
-engine = create_engine(sqlite_url)
+engine = create_engine(secrets.connection_string)
 
 
 def create_db_and_tables():
