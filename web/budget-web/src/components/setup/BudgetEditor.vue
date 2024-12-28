@@ -204,19 +204,19 @@ export default {
             if (item.amount == "") item.amount = 0;
         },
         async importBudget() {
-            await this.$api
-                .get(`budget/user/1/filter?year=${this.selectedYear}&month=${this.selectedMonth - 1}`)
-                .then((response) => {
-                    if (response.length > 0) {
-                        response.forEach((budget) => {
-                            budget.id = -1;
-                        });
-                        this.budgets = response;
-                    } else {
-                        this.originalBudgets = [];
-                        this.initializeBudget();
-                    }
-                });
+            const lastMonth = this.selectedMonth - 1 == 0 ? 12 : this.selectedMonth - 1;
+            const lastYear = this.selectedMonth - 1 == 0 ? this.selectedYear - 1 : this.selectedYear;
+            await this.$api.get(`budget/user/1/filter?year=${lastYear}&month=${lastMonth}`).then((response) => {
+                if (response.length > 0) {
+                    response.forEach((budget) => {
+                        budget.id = -1;
+                    });
+                    this.budgets = response;
+                } else {
+                    this.originalBudgets = [];
+                    this.initializeBudget();
+                }
+            });
         },
         async save() {
             let newBudgets = [];
