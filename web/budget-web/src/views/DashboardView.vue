@@ -1,5 +1,5 @@
 <template class="background">
-    <v-container fluid v-if="dataInitialized" class="ma-0 pa-0 dashboard">
+    <v-container fluid v-if="dataInitialized && budgets.length > 0 && transactions.length > 0" class="ma-0 pa-0 dashboard">
         <v-row class="ma-0 pa-0" no-gutters>
             <v-col cols="3" class="pa-2">
                 <overview-pod :transactions="transactions" :budgets="budgets" class="pod" @update-date="updateDate" />
@@ -20,6 +20,7 @@
             </v-col>
         </v-row>
     </v-container>
+    <div v-else>No budget and/or no transactions</div>
 </template>
 <script>
 import OverviewPod from "@/components/dashboard/OverviewPod.vue";
